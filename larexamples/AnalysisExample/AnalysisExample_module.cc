@@ -5,7 +5,8 @@
  * @ingroup AnalysisExample
  * @author William Seligman (seligman@nevis.columbia.edu)
  *
- * See <https://cdcvs.fnal.gov/redmine/projects/larsoft/wiki/Using_art_in_LArSoft>
+ * See
+ * <https://cdcvs.fnal.gov/redmine/projects/larsoft/wiki/Using_art_in_LArSoft>
  * for a description of the ART classes used here.
  *
  * Almost everything you see in the code below may have to be changed
@@ -19,7 +20,8 @@
  * Also note that, despite our efforts, the documentation and the practices in
  * this code may fall out of date. In doubt, ask!
  *
- * The last revision of this code was done in August 2017 with LArSoft v06_44_00.
+ * The last revision of this code was done in August 2017 with LArSoft
+ * v06_44_00.
  *
  * This is in-source documentation in Doxygen format. Doxygen is a
  * utility that creates web pages from specially-formatted comments in
@@ -53,7 +55,6 @@
 #include "larcorealg/Geometry/GeometryCore.h"
 #include "larcoreobj/SimpleTypesAndConstants/geo_types.h"
 #include "lardata/DetectorInfoServices/DetectorClocksService.h"
-#include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
 #include "lardataobj/RecoBase/Cluster.h"
 #include "lardataobj/RecoBase/Hit.h"
 #include "lardataobj/Simulation/SimChannel.h"
@@ -126,52 +127,53 @@ namespace {
 namespace lar {
   namespace example {
 
-    // BEGIN AnalysisExample group -----------------------------------------------
+    // BEGIN AnalysisExample group
+    // -----------------------------------------------
     /// @ingroup AnalysisExample
     /// @{
     //-----------------------------------------------------------------------
     //-----------------------------------------------------------------------
     // class definition
     /**
-   * @brief Example analyzer module.
-   * @see @ref AnalysisExample "analysis module example overview"
-   *
-   * This class extracts information from the generated and reconstructed
-   * particles.
-   *
-   * It produces histograms for the simulated particles in the input file:
-   * - PDG ID (flavor) of all particles
-   * - momentum of the primary particles selected to have a specific PDG ID
-   * - length of the selected particle trajectory
-   *
-   * It also produces two ROOT trees.
-   *
-   * The first ROOT tree contains information on the simulated
-   * particles, including "dEdx", a binned histogram of collected
-   * charge as function of track range.
-   *
-   * The second ROOT tree contains information on the reconstructed hits.
-   *
-   * Configuration parameters
-   * =========================
-   *
-   * - *SimulationLabel* (string, default: "largeant"): tag of the input data
-   *   product with the detector simulation information (typically an instance
-   *   of the LArG4 module)
-   *
-   * - *HitLabel* (string, mandatory): tag of the input data product with
-   *   reconstructed hits
-   *
-   * - *ClusterLabel* (string, mandatory): tag of the input data product with
-   *   reconstructed clusters
-   *
-   * - *PDGcode* (integer, mandatory): particle type (PDG ID) to be selected;
-   *   only primary particles of this type will be considered
-   *
-   * - *BinSize* (real, mandatory): @f$ dx @f$ [cm] used for the @f$ dE/dx @f$
-   *   calculation
-   *
-   */
+     * @brief Example analyzer module.
+     * @see @ref AnalysisExample "analysis module example overview"
+     *
+     * This class extracts information from the generated and reconstructed
+     * particles.
+     *
+     * It produces histograms for the simulated particles in the input file:
+     * - PDG ID (flavor) of all particles
+     * - momentum of the primary particles selected to have a specific PDG ID
+     * - length of the selected particle trajectory
+     *
+     * It also produces two ROOT trees.
+     *
+     * The first ROOT tree contains information on the simulated
+     * particles, including "dEdx", a binned histogram of collected
+     * charge as function of track range.
+     *
+     * The second ROOT tree contains information on the reconstructed hits.
+     *
+     * Configuration parameters
+     * =========================
+     *
+     * - *SimulationLabel* (string, default: "largeant"): tag of the input data
+     *   product with the detector simulation information (typically an instance
+     *   of the LArG4 module)
+     *
+     * - *HitLabel* (string, mandatory): tag of the input data product with
+     *   reconstructed hits
+     *
+     * - *ClusterLabel* (string, mandatory): tag of the input data product with
+     *   reconstructed clusters
+     *
+     * - *PDGcode* (integer, mandatory): particle type (PDG ID) to be selected;
+     *   only primary particles of this type will be considered
+     *
+     * - *BinSize* (real, mandatory): @f$ dx @f$ [cm] used for the @f$ dE/dx @f$
+     *   calculation
+     *
+     */
     class AnalysisExample : public art::EDAnalyzer {
     public:
       // This structure describes the configuration parameters of the
@@ -200,7 +202,8 @@ namespace lar {
         // One Atom for each parameter
         fhicl::Atom<art::InputTag> SimulationLabel{
           Name("SimulationLabel"),
-          Comment("tag of the input data product with the detector simulation information")};
+          Comment("tag of the input data product with the detector simulation "
+                  "information")};
 
         fhicl::Atom<art::InputTag> HitLabel{
           Name("HitLabel"),
@@ -284,12 +287,13 @@ namespace lar {
       // go from this custom example to your own task.
 
       // The parameters we'll read from the .fcl file.
-      art::InputTag
-        fSimulationProducerLabel; ///< The name of the producer that tracked simulated particles through the detector
-      art::InputTag fHitProducerLabel;     ///< The name of the producer that created hits
-      art::InputTag fClusterProducerLabel; ///< The name of the producer that created clusters
-      int fSelectedPDG;                    ///< PDG code of particle we'll focus on
-      double fBinSize;                     ///< For dE/dx work: the value of dx.
+      art::InputTag fSimulationProducerLabel; ///< The name of the producer that tracked
+                                              ///< simulated particles through the detector
+      art::InputTag fHitProducerLabel;        ///< The name of the producer that created hits
+      art::InputTag fClusterProducerLabel;    ///< The name of the producer that
+                                              ///< created clusters
+      int fSelectedPDG;                       ///< PDG code of particle we'll focus on
+      double fBinSize;                        ///< For dE/dx work: the value of dx.
 
       // Pointers to the histograms we'll create.
       TH1D* fPDGCodeHist;     ///< PDG code of all particles
@@ -324,7 +328,8 @@ namespace lar {
       /// Number of dE/dx bins in a given track.
       int fSimNdEdxBins;
 
-      /// The vector that will be used to accumulate dE/dx values as a function of range.
+      /// The vector that will be used to accumulate dE/dx values as a function
+      /// of range.
       std::vector<double> fSimdEdxBins;
       /// @}
 
@@ -336,22 +341,22 @@ namespace lar {
       /// Number of dE/dx bins in a given track.
       int fRecoNdEdxBins;
 
-      /// The vector that will be used to accumulate dE/dx values as a function of range.
+      /// The vector that will be used to accumulate dE/dx values as a function
+      /// of range.
       std::vector<double> fRecodEdxBins;
 
       /// @}
 
       // Other variables that will be shared between different methods.
       geo::GeometryCore const* fGeometryService; ///< pointer to Geometry provider
-      detinfo::DetectorClocks const*
-        fTimeService;         ///< pointer to detector clock time service provider
-      double fElectronsToGeV; ///< conversion factor
-      int fTriggerOffset;     ///< (units of ticks) time of expected neutrino event
+      double fElectronsToGeV;                    ///< conversion factor
+      int fTriggerOffset; ///< (units of ticks) time of expected neutrino event
 
     }; // class AnalysisExample
 
     /// @}
-    // END AnalysisExample group -------------------------------------------------
+    // END AnalysisExample group
+    // -------------------------------------------------
 
     //-----------------------------------------------------------------------
     //-----------------------------------------------------------------------
@@ -375,15 +380,14 @@ namespace lar {
     {
       // Get a pointer to the geometry service provider.
       fGeometryService = lar::providerFrom<geo::Geometry>();
-      // The same for detector TDC clock services.
-      fTimeService = lar::providerFrom<detinfo::DetectorClocksService>();
-      // Access to detector properties.
-      const detinfo::DetectorProperties* detprop =
-        lar::providerFrom<detinfo::DetectorPropertiesService>();
-      fTriggerOffset = detprop->TriggerOffset();
 
-      // Since art 2.8, you can and should tell beforehand, here in the constructor,
-      // all the data the module is going to read ("consumes") or might read
+      auto const clock_data =
+        art::ServiceHandle<detinfo::DetectorClocksService const>()->DataForJob();
+      fTriggerOffset = trigger_offset(clock_data);
+
+      // Since art 2.8, you can and should tell beforehand, here in the
+      // constructor, all the data the module is going to read ("consumes") or
+      // might read
       // ("may_consume"). Diligence here will in the future help the framework
       // execute modules in parallel, making sure the order is correct.
       consumes<std::vector<simb::MCParticle>>(fSimulationProducerLabel);
@@ -749,6 +753,9 @@ namespace lar {
       // track ID as the key, to hold the vectors of dE/dx information.
       std::map<int, std::vector<double>> dEdxMap;
 
+      auto const clock_data =
+        art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(event);
+
       // For every Hit:
       for (auto const& hit : (*hitHandle)) {
         // The channel associated with this hit.
@@ -774,10 +781,10 @@ namespace lar {
         // $LARDATAOBJ_DIR/source/lardataobj/Simulation/SimChannel.h
 
         typedef sim::SimChannel::StoredTDC_t TDC_t;
-        TDC_t start_tdc = fTimeService->TPCTick2TDC(hit.StartTick());
-        TDC_t end_tdc = fTimeService->TPCTick2TDC(hit.EndTick());
-        TDC_t hitStart_tdc = fTimeService->TPCTick2TDC(hit.PeakTime() - 3. * hit.SigmaPeakTime());
-        TDC_t hitEnd_tdc = fTimeService->TPCTick2TDC(hit.PeakTime() + 3. * hit.SigmaPeakTime());
+        TDC_t start_tdc = clock_data.TPCTick2TDC(hit.StartTick());
+        TDC_t end_tdc = clock_data.TPCTick2TDC(hit.EndTick());
+        TDC_t hitStart_tdc = clock_data.TPCTick2TDC(hit.PeakTime() - 3. * hit.SigmaPeakTime());
+        TDC_t hitEnd_tdc = clock_data.TPCTick2TDC(hit.PeakTime() + 3. * hit.SigmaPeakTime());
 
         start_tdc = std::max(start_tdc, hitStart_tdc);
         end_tdc = std::min(end_tdc, hitEnd_tdc);
@@ -855,9 +862,9 @@ namespace lar {
               << " start TDC tick = " << hit.StartTick() << " end TDC tick = " << hit.EndTick()
               << " peak TDC tick = " << hit.PeakTime()
               << " sigma peak time = " << hit.SigmaPeakTime()
-              << " adjusted start TDC tick = " << fTimeService->TPCTick2TDC(hit.StartTick())
-              << " adjusted end TDC tick = " << fTimeService->TPCTick2TDC(hit.EndTick())
-              << " adjusted peak TDC tick = " << fTimeService->TPCTick2TDC(hit.PeakTime())
+              << " adjusted start TDC tick = " << clock_data.TPCTick2TDC(hit.StartTick())
+              << " adjusted end TDC tick = " << clock_data.TPCTick2TDC(hit.EndTick())
+              << " adjusted peak TDC tick = " << clock_data.TPCTick2TDC(hit.PeakTime())
               << " adjusted start_tdc = " << start_tdc << " adjusted end_tdc = " << end_tdc
               << " time = " << time << std::endl;
 
