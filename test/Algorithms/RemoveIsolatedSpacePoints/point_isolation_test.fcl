@@ -27,9 +27,8 @@ process_name: IsolTest
 
 
 services: {
-  TimeTracker:            { printSummary: true }
-  Geometry:               @local::lartpcdetector_geometry
-  ExptGeoHelperInterface: @local::lartpcdetector_geometry_helper
+  TimeTracker: { printSummary: true }
+               @table::lartpcdetector_geometry_services
 }
 
 source: {
