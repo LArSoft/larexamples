@@ -7,7 +7,6 @@ fcldir product_dir job
 #
 product         version
 larsim		v09_20_00_rc0
-
 cetbuildtools	v7_17_01	-	only_for_build
 end_product_list
 
