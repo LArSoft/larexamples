@@ -40,6 +40,7 @@
 #include <chrono>
 #include <sstream>
 #include <iostream>
+#include <array>
 
 
 // BEGIN RemoveIsolatedSpacePoints group ---------------------------------------

@@ -13,6 +13,7 @@
 // C/C++ standard libraries
 #include <utility> // std::pair<>
 #include <cmath> // std::sqrt()
+#include <array>
 
 
 // function prototype declarations (implementation below)
