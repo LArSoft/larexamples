@@ -1,0 +1,4 @@
+find_package( ROOT REQUIRED COMPONENTS Core Physics Hist MathMore RIO GenVector Geom Minuit Minuit2 XMLIO Gdml TMVA EG)
+set(HAVE_ROOT6 BOOL:True)
+set(ROOTCLING ROOT::rootcling)
+find_package( larsim REQUIRED )
