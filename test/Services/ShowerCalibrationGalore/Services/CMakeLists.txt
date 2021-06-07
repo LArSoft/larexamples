@@ -6,7 +6,7 @@ simple_plugin(ShowerCalibrationGaloreTest "module"
   mf_MessageLogger
   fhiclcpp
   cetlib cetlib_except 
-  ${ROOT_BASIC_LIB_LIST}
+  ${ROOT_LIBRARIES}
 )
 
 

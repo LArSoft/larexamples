@@ -57,10 +57,10 @@ simple_plugin(AnalysisExample "module"
               ${ART_ROOT_IO_TFILESERVICE_SERVICE}
               ${ART_ROOT_IO_TFILE_SUPPORT}
               ${MF_MESSAGELOGGER}
-              ${ROOT_CORE}
-              ${ROOT_HIST}
-              ${ROOT_PHYSICS}
-              ${ROOT_TREE}
+              ROOT::Core
+              ROOT::Hist
+              ROOT::Physics
+              ROOT::Tree
               larcorealg_Geometry
               nusimdata_SimulationBase
 )

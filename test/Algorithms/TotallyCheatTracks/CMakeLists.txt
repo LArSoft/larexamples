@@ -6,8 +6,8 @@ simple_plugin(ParticleMaker "module"
     canvas
     ${MF_MESSAGELOGGER}
     ${FHICLCPP}
-    ${ROOT_CORE}
-    ${ROOT_PHYSICS}
+    ROOT::Core
+    ROOT::Physics
   NO_INSTALL
   )
 
@@ -20,8 +20,8 @@ simple_plugin(DumpCheatTracks "module"
     canvas
     ${MF_MESSAGELOGGER}
     ${FHICLCPP}
-    ${ROOT_CORE}
-    ${ROOT_EG}
+    ROOT::Core
+    ROOT::EG
   USE_BOOST_UNIT
   NO_INSTALL
   )

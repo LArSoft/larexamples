@@ -5,7 +5,7 @@ art_make(
     PointIsolationAlgStress_test.cc
   LIB_LIBRARIES
     lardataobj_RecoBase
-    ${ROOT_CORE}
+    ROOT::Core
   MODULE_LIBRARIES
     lardataobj_RecoBase
     larcorealg_Geometry
