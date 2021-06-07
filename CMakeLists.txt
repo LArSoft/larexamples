@@ -8,7 +8,7 @@
 
 cmake_minimum_required (VERSION 3.19 FATAL_ERROR)
 
-project(larexamples 09.01.10 LANGUAGES CXX)
+project(larexamples VERSION 09.01.10 LANGUAGES CXX)
 
 find_package(cetmodules REQUIRED)
 find_package(canvas_root_io)
