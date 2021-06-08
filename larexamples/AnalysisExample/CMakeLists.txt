@@ -56,7 +56,7 @@ simple_plugin(AnalysisExample "module"
               ${ART_FRAMEWORK_SERVICES_REGISTRY}
               ${ART_ROOT_IO_TFILESERVICE_SERVICE}
               ${ART_ROOT_IO_TFILE_SUPPORT}
-              ${MF_MESSAGELOGGER}
+              messagefacility::MFMessageLogger
               ROOT::Core
               ROOT::Hist
               ROOT::Physics

@@ -3,9 +3,9 @@ simple_plugin(AtomicNumberTest "module"
    ${ART_FRAMEWORK_CORE}
    ${ART_FRAMEWORK_SERVICES_REGISTRY}
    art_Utilities canvas
-   ${MF_MESSAGELOGGER}
+   messagefacility::MFMessageLogger
    
-   ${FHICLCPP}
+   fhiclcpp::fhiclcpp fhiclcpp::types
    cetlib cetlib_except
 )
 

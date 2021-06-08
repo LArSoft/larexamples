@@ -1,5 +1,5 @@
 simple_plugin(RecoProxyUsageExample "module"
-              ${MF_MESSAGELOGGER}
+              messagefacility::MFMessageLogger
               ROOT::Core
               ROOT::GenVector
               lardataobj_RecoBase

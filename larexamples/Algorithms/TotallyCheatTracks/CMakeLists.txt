@@ -6,7 +6,7 @@ art_make(
     ROOT::Physics
     lardataobj_RecoBase
   MODULE_LIBRARIES
-    ${MF_MESSAGELOGGER}
+    messagefacility::MFMessageLogger
     ROOT::Core
     larexamples_Algorithms_TotallyCheatTracks
     nusimdata_SimulationBase
