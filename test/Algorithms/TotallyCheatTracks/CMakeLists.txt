@@ -4,7 +4,7 @@ simple_plugin(ParticleMaker "module"
     art_Framework_Principal
     art_Persistency_Provenance
     canvas
-    messagefacility::MFMessageLogger
+    messagefacility::MF_MessageLogger
     fhiclcpp::fhiclcpp fhiclcpp::types
     ROOT::Core
     ROOT::Physics
@@ -18,7 +18,7 @@ simple_plugin(DumpCheatTracks "module"
     art_Framework_Principal
     art_Persistency_Provenance
     canvas
-    messagefacility::MFMessageLogger
+    messagefacility::MF_MessageLogger
     fhiclcpp::fhiclcpp fhiclcpp::types
     ROOT::Core
     ROOT::EG

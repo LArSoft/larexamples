@@ -2,7 +2,7 @@
 cet_test(AtomicNumber_test
    LIBRARIES
       larexamples_Services_AtomicNumber_Providers
-      messagefacility::MFMessageLogger
+      messagefacility::MF_MessageLogger
       
       fhiclcpp::fhiclcpp fhiclcpp::types
       cetlib cetlib_except
@@ -14,7 +14,7 @@ cet_test(BoostedAtomicNumber_test
    TEST_ARGS -- ./test_krypton_atomic_number.fcl
    LIBRARIES
       larexamples_Services_AtomicNumber_Providers
-      messagefacility::MFMessageLogger
+      messagefacility::MF_MessageLogger
       
       fhiclcpp::fhiclcpp fhiclcpp::types
       cetlib cetlib_except
@@ -25,7 +25,7 @@ cet_test(BoostedAtomicNumber_test
 cet_test(ValidateAtomicNumberConfiguration_test
    LIBRARIES
       larexamples_Services_AtomicNumber_Providers
-      messagefacility::MFMessageLogger
+      messagefacility::MF_MessageLogger
       
       fhiclcpp::fhiclcpp fhiclcpp::types
       cetlib cetlib_except

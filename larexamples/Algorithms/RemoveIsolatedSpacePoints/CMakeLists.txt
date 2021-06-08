@@ -6,7 +6,7 @@ art_make(
   MODULE_LIBRARIES
     larexamples_Algorithms_RemoveIsolatedSpacePoints
     ${ART_FRAMEWORK_SERVICES_REGISTRY}
-    messagefacility::MFMessageLogger
+    messagefacility::MF_MessageLogger
   )
 
 install_headers()

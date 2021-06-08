@@ -17,7 +17,7 @@ art_make(
     art_Framework_Principal
     art_Persistency_Provenance
     art_Utilities canvas
-    messagefacility::MFMessageLogger
+    messagefacility::MF_MessageLogger
     
     fhiclcpp::fhiclcpp fhiclcpp::types
   )
