@@ -5,7 +5,7 @@ art_make(
     ROOT::Core
   MODULE_LIBRARIES
     larexamples_Algorithms_RemoveIsolatedSpacePoints
-    ${ART_FRAMEWORK_SERVICES_REGISTRY}
+    art::Framework_Services_Registry
     messagefacility::MF_MessageLogger
   )
 

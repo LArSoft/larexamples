@@ -1,7 +1,7 @@
 simple_plugin(AtomicNumberTest "module"
-   ${ART_FRAMEWORK_CORE}
-   ${ART_FRAMEWORK_CORE}
-   ${ART_FRAMEWORK_SERVICES_REGISTRY}
+   art::Framwork_Core
+   art::Framwork_Core
+   art::Framework_Services_Registry
    art_Utilities canvas
    messagefacility::MF_MessageLogger
    
