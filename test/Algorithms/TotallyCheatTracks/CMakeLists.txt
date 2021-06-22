@@ -4,10 +4,10 @@ simple_plugin(ParticleMaker "module"
     art_Framework_Principal
     art_Persistency_Provenance
     canvas
-    ${MF_MESSAGELOGGER}
-    ${FHICLCPP}
-    ${ROOT_CORE}
-    ${ROOT_PHYSICS}
+    messagefacility::MF_MessageLogger
+    fhiclcpp::fhiclcpp fhiclcpp::types
+    ROOT::Core
+    ROOT::Physics
   NO_INSTALL
   )
 
@@ -18,10 +18,10 @@ simple_plugin(DumpCheatTracks "module"
     art_Framework_Principal
     art_Persistency_Provenance
     canvas
-    ${MF_MESSAGELOGGER}
-    ${FHICLCPP}
-    ${ROOT_CORE}
-    ${ROOT_EG}
+    messagefacility::MF_MessageLogger
+    fhiclcpp::fhiclcpp fhiclcpp::types
+    ROOT::Core
+    ROOT::EG
   USE_BOOST_UNIT
   NO_INSTALL
   )

@@ -2,11 +2,11 @@ art_make(
   LIB_LIBRARIES
     larcorealg_Geometry
     cetlib_except
-    ${ROOT_CORE}
+    ROOT::Core
   MODULE_LIBRARIES
     larexamples_Algorithms_RemoveIsolatedSpacePoints
-    ${ART_FRAMEWORK_SERVICES_REGISTRY}
-    ${MF_MESSAGELOGGER}
+    art::Framework_Services_Registry
+    messagefacility::MF_MessageLogger
   )
 
 install_headers()
