@@ -16,8 +16,7 @@
 #include "larexamples/Services/AtomicNumber/Providers/AtomicNumber.h"
 
 // framework and support libraries
-#include "art/Framework/Services/Registry/ServiceMacros.h"
-
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
 namespace lar {
 
