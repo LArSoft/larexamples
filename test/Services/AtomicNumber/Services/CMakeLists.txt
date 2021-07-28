@@ -1,12 +1,12 @@
 simple_plugin(AtomicNumberTest "module"
-   ${ART_FRAMEWORK_CORE}
-   ${ART_FRAMEWORK_CORE}
-   ${ART_FRAMEWORK_SERVICES_REGISTRY}
-   art_Utilities canvas
-   ${MF_MESSAGELOGGER}
+   art::Framework_Core
+   art::Framework_Core
+   art::Framework_Services_Registry
+   art::Utilities canvas::canvas
+   messagefacility::MF_MessageLogger
    
-   ${FHICLCPP}
-   cetlib cetlib_except
+   fhiclcpp::fhiclcpp
+   cetlib::cetlib cetlib_except
 )
 
 

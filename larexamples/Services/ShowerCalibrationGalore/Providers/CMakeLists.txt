@@ -1,11 +1,11 @@
 art_make(
   LIB_LIBRARIES
-    ${ROOT_CORE}
-    ${ROOT_HIST}
-    ${ROOT_MATHMORE}
-    ${ROOT_RIO}
-    cetlib
-    cetlib_except
+    ROOT::Core
+    ROOT::Hist
+    ROOT::MathMore
+    ROOT::Rio
+    cetlib::cetlib
+    cetlib_except::cetlib_except
     lardataobj_RecoBase
   )
 

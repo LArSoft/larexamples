@@ -5,7 +5,7 @@ art_make(
     PointIsolationAlgStress_test.cc
   LIB_LIBRARIES
     lardataobj_RecoBase
-    ${ROOT_CORE}
+    ROOT::Core
   MODULE_LIBRARIES
     lardataobj_RecoBase
     larcorealg_Geometry
@@ -13,13 +13,13 @@ art_make(
     larexamples_Algorithms_RemoveIsolatedSpacePoints
     test_Algorithms_RemoveIsolatedSpacePoints
     art_Framework_Core
-    art_Framework_Services_Registry
-    art_Framework_Principal
-    art_Persistency_Provenance
-    art_Utilities canvas
-    ${MF_MESSAGELOGGER}
+    art::Framework_Services_Registry
+    art::Framework_Principal
+    art::Persistency_Provenance
+    art::Utilities canvas::canvas
+    messagefacility::MF_MessageLogger
     
-    ${FHICLCPP}
+    fhiclcpp::fhiclcpp
   )
 
 cet_test(PointIsolationAlg_test USE_BOOST_UNIT)

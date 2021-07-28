@@ -2,12 +2,12 @@ add_subdirectory(CheatTrackData)
 
 art_make(
   LIB_LIBRARIES
-    ${ROOT_CORE}
-    ${ROOT_PHYSICS}
+    ROOT::Core
+    ROOT::Physics
     lardataobj_RecoBase
   MODULE_LIBRARIES
-    ${MF_MESSAGELOGGER}
-    ${ROOT_CORE}
+    messagefacility::MF_MessageLogger
+    ROOT::Core
     larexamples_Algorithms_TotallyCheatTracks
     nusimdata_SimulationBase
   )
