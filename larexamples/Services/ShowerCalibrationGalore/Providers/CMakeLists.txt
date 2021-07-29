@@ -3,7 +3,7 @@ art_make(
     ROOT::Core
     ROOT::Hist
     ROOT::MathMore
-    ROOT::Rio
+    ROOT::RIO
     cetlib::cetlib
     cetlib_except::cetlib_except
     lardataobj_RecoBase
