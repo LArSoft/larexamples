@@ -2,7 +2,6 @@
 cet_test(CreateTestShowerCalibrationFromPID_test
   SOURCES CreateTestShowerCalibrationFromPID.cxx CreateTestShowerCalibrationFromPID_test.cc
   LIBRARIES
-    ${ROOT_BASIC_LIB_LIST}
     ROOT::Core
     ROOT::Hist
   )
@@ -16,7 +15,6 @@ cet_test(ShowerCalibrationGaloreFromPID_test
     
     fhiclcpp
     cetlib::cetlib cetlib_except
-    ${ROOT_BASIC_LIB_LIST}
     ROOT::Core
     ROOT::Hist
   )
@@ -29,7 +27,6 @@ cet_test(ShowerCalibrationGaloreScale_test
     
     fhiclcpp
     cetlib::cetlib cetlib_except
-    ${ROOT_BASIC_LIB_LIST}
     ROOT::Core
     ROOT::Hist
   )
