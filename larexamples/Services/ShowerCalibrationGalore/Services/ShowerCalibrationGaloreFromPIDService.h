@@ -15,6 +15,7 @@
 /// LArSoft libraries
 #include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreFromPID.h"
 #include "larexamples/Services/ShowerCalibrationGalore/Services/ShowerCalibrationGaloreService.h"
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
 
 namespace lar {
