@@ -131,8 +131,7 @@ void PointIsolationTest(
     //
     // sort and compare the results
     //
-    BOOST_CHECK_EQUAL_COLLECTIONS
-      (actual.cbegin(), actual.cend(), expected.cbegin(), expected.cend());
+    BOOST_TEST(actual == expected, boost::test_tools::per_element());
 
   } // for isolation radius
 
@@ -185,4 +184,3 @@ BOOST_FIXTURE_TEST_CASE(PointIsolationTestCase, ArgsFixture) {
 
 /// @}
 // END RemoveIsolatedSpacePoints group -----------------------------------------
-
