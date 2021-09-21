@@ -18,6 +18,7 @@
 
 
 // LArSoft libraries
+#define BOOST_TEST_MODULE (Boosted atomic number test)
 #include "larexamples/Services/AtomicNumber/Providers/AtomicNumber.h"
 #include "larcorealg/TestUtils/unit_test_base.h" // testing::TesterEnvironment
 #include "larcorealg/TestUtils/boost_unit_test_base.h" // testing::BoostCommandLineConfiguration

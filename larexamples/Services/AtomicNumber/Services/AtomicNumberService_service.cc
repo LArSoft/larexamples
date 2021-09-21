@@ -12,6 +12,7 @@
 
 // LArSoft libraries
 #include "larexamples/Services/AtomicNumber/Services/AtomicNumberService.h"
+#include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 
 
 // -----------------------------------------------------------------------------

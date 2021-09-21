@@ -11,7 +11,7 @@
 
 // our header
 #include "larexamples/Services/ShowerCalibrationGalore/Services/ShowerCalibrationGaloreScaleService.h"
-
+#include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 
 DEFINE_ART_SERVICE_INTERFACE_IMPL(
   lar::example::ShowerCalibrationGaloreScaleService,

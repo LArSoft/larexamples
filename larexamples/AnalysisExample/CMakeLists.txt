@@ -39,8 +39,8 @@
 # these files only has meaning in the context of art/LArSoft. You have
 # to use detective work to determine the meaning of most of what you
 # see in the CMakeLists.txt files; for example, in the "simple_plugin"
-# below, you can see "cetlib_except", which presumably means the
-# cetlib exception-handling library.
+# below, you can see "cetlib_except::cetlib_except", which presumably means the
+# cetlib::cetlib exception-handling library.
 
 # The function of cmake is to create a Makefile for use by the "make"
 # program; the "mrb iinstall" procedure runs "make" for you after it's
@@ -53,14 +53,14 @@
 # libraries/resources needed to compile/execute the module.
 
 simple_plugin(AnalysisExample "module"
-              ${ART_FRAMEWORK_SERVICES_REGISTRY}
-              ${ART_ROOT_IO_TFILESERVICE_SERVICE}
-              ${ART_ROOT_IO_TFILE_SUPPORT}
-              ${MF_MESSAGELOGGER}
-              ${ROOT_CORE}
-              ${ROOT_HIST}
-              ${ROOT_PHYSICS}
-              ${ROOT_TREE}
+              art::Framework_Services_Registry
+              art_root_io::TFileService_service
+              art_root_io::tfile_support
+              messagefacility::MF_MessageLogger
+              ROOT::Core
+              ROOT::Hist
+              ROOT::Physics
+              ROOT::Tree
               larcorealg_Geometry
               nusimdata_SimulationBase
 )

@@ -17,8 +17,7 @@
 #include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGalore.h"
 
 /// framework libraries
-#include "art/Framework/Services/Registry/ServiceMacros.h" // (for includers)
-
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
 namespace lar {
    namespace example {
@@ -48,4 +47,3 @@ DECLARE_ART_SERVICE_INTERFACE
 
 
 #endif // LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_SERVICES_SHOWERCALIBRATIONGALORESERVICE_H
-

@@ -19,7 +19,7 @@
 
 // framework libraries
 #include "art/Framework/Services/Registry/ServiceTable.h"
-#include "art/Framework/Services/Registry/ServiceMacros.h" // (for includers)
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
 // C/C++ standard libraries
 #include <memory> // std::unique_ptr<>, std::make_unique()
