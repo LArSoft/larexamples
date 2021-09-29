@@ -43,6 +43,7 @@ find_ups_product(cetlib)
 find_ups_product(cetlib_except)
 find_ups_product(art_root_io)
 find_ups_product(nusimdata)
+find_ups_boost()
 find_ups_root()
 
 # macros for dictionary and simple_plugin
