@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(AllTests) {
    auto const expected_Z = pset_expected.get<unsigned int>("AtomicNumber");
 
    // here goes the test... Zprov is the data member of the fixture
-   BOOST_CHECK_EQUAL(Zprov.Z(), expected_Z);
+   BOOST_TEST(Zprov.Z() == expected_Z);
 
 } // BOOST_AUTO_TEST_CASE(AllTests)
 

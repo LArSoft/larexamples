@@ -23,11 +23,11 @@
 
 // LArSoft libraries
 #include "larexamples/Algorithms/RemoveIsolatedSpacePoints/PointIsolationAlg.h"
+#include "cetlib/pow.h"
 
 // Boost libraries
 #define BOOST_TEST_MODULE ( PointIsolationAlg_test )
-#include <cetlib/quiet_unit_test.hpp> // BOOST_AUTO_TEST_CASE()
-#include <boost/test/test_tools.hpp> // BOOST_CHECK(), BOOST_CHECK_EQUAL()
+#include "boost/test/unit_test.hpp"
 
 // C/C++ standard libraries
 #include <array>
@@ -75,8 +75,7 @@ void PointIsolationTest1() {
 
   result = algo.removeIsolatedPoints(points);
   std::sort(result.begin(), result.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS
-    (result.cbegin(), result.cend(), expected.cbegin(), expected.cend());
+  BOOST_TEST(result == expected, boost::test_tools::per_element());
 
 
   // second test: two far points
@@ -85,8 +84,7 @@ void PointIsolationTest1() {
 
   result = algo.removeIsolatedPoints(points);
   std::sort(result.begin(), result.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS
-    (result.cbegin(), result.cend(), expected.cbegin(), expected.cend());
+  BOOST_TEST(result == expected, boost::test_tools::per_element());
 
 
   // third test: two close points, another isolated
@@ -96,8 +94,7 @@ void PointIsolationTest1() {
 
   result = algo.removeIsolatedPoints(points);
   std::sort(result.begin(), result.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS
-    (result.cbegin(), result.cend(), expected.cbegin(), expected.cend());
+  BOOST_TEST(result == expected, boost::test_tools::per_element());
 
 
   // fourth test: two close points, another two also close
@@ -107,9 +104,7 @@ void PointIsolationTest1() {
 
   result = algo.removeIsolatedPoints(points);
   std::sort(result.begin(), result.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS
-    (result.cbegin(), result.cend(), expected.cbegin(), expected.cend());
-
+  BOOST_TEST(result == expected, boost::test_tools::per_element());
 
 } // PointIsolationTest1()
 
@@ -243,12 +238,11 @@ void PointIsolationTest2(unsigned int levels) {
       (expectedBase.end() - nExpected, expectedBase.end());
 
     std::vector<size_t> result = algo.removeIsolatedPoints(points);
-    BOOST_CHECK_EQUAL(result.size(), expected.size());
+    BOOST_TEST(result.size() == expected.size());
 
     std::sort(result.begin(), result.end());
     std::sort(expected.begin(), expected.end());
-    BOOST_CHECK_EQUAL_COLLECTIONS
-      (result.cbegin(), result.cend(), expected.cbegin(), expected.cend());
+    BOOST_TEST(result == expected, boost::test_tools::per_element());
 
   } while (--level > 0);
 
@@ -270,4 +264,3 @@ BOOST_AUTO_TEST_CASE(PointIsolationAlgVerificationTest) {
 
 /// @}
 // END RemoveIsolatedSpacePoints group -----------------------------------------
-
