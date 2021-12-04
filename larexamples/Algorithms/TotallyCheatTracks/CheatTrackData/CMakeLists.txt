@@ -1,5 +1,5 @@
-# this will create both the library and the dictionary
-art_make()
+
+art_dictionary(DICTIONARY_LIBRARIES PRIVATE nusimdata::SimulationBase)
 
 install_source()
 install_headers()
