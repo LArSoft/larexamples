@@ -1,5 +1,5 @@
 simple_plugin(ParticleMaker "module"
-    nusimdata_SimulationBase
+    nusimdata::SimulationBase
     art_Framework_Core
     art::Framework_Principal
     art::Persistency_Provenance
@@ -13,7 +13,7 @@ simple_plugin(ParticleMaker "module"
 
 simple_plugin(DumpCheatTracks "module"
     lardataobj_RecoBase
-    nusimdata_SimulationBase
+    nusimdata::SimulationBase
     art_Framework_Core
     art::Framework_Principal
     art::Persistency_Provenance

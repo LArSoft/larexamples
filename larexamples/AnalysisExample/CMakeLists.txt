@@ -62,7 +62,7 @@ simple_plugin(AnalysisExample "module"
               ROOT::Physics
               ROOT::Tree
               larcorealg_Geometry
-              nusimdata_SimulationBase
+              nusimdata::SimulationBase
 )
 
 # The above will create libraries in $MRB_INSTALL; these are the ".so"

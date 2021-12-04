@@ -9,7 +9,7 @@ art_make(
     messagefacility::MF_MessageLogger
     ROOT::Core
     larexamples_Algorithms_TotallyCheatTracks
-    nusimdata_SimulationBase
+    nusimdata::SimulationBase
   )
 
 install_headers()
