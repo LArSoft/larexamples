@@ -2,6 +2,7 @@ art_make(
   LIB_LIBRARIES
     larcorealg_Geometry
     cetlib_except::cetlib_except
+    cetlib::cetlib
     ROOT::Core
   MODULE_LIBRARIES
     larexamples_Algorithms_RemoveIsolatedSpacePoints

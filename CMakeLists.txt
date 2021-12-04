@@ -13,8 +13,6 @@ project(larexamples VERSION 09.02.09 LANGUAGES CXX)
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
 
-list(APPEND CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules $ENV{ART_DIR}/Modules)
-
 include(CetCMakeEnv)
 cet_cmake_env()
 
@@ -26,6 +24,16 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
 
 cet_report_compiler_flags()
 
+find_package(cetlib_except REQUIRED PUBLIC)
+find_package(cetlib REQUIRED PUBLIC)
+find_package(fhiclcpp REQUIRED PUBLIC)
+find_package(messagefacility REQUIRED PUBLIC)
+find_package(canvas_root_io REQUIRED)
+find_package(art REQUIRED PUBLIC)
+find_package(art_root_io REQUIRED PUBLIC)
+find_package(nusimdata REQUIRED PUBLIC)
+find_package(Boost REQUIRED)
+find_package(ROOT COMPONENTS Core  RIO Tree Hist MathCore Physics REQUIRED PUBLIC)
 # these are minimum required versions, not the actual product versions
 find_ups_product( larcoreobj )
 find_ups_product( larcorealg )
@@ -35,16 +43,7 @@ find_ups_product( lardataalg )
 find_ups_product( lardata )
 find_ups_product( larevt )
 find_ups_product( larsim )
-find_ups_product( nutools )
-find_ups_product( art )
-find_ups_product(messagefacility)
-find_ups_product(fhiclcpp)
-find_ups_product(cetlib)
-find_ups_product(cetlib_except)
-find_ups_product(art_root_io)
-find_ups_product(nusimdata)
-find_ups_boost()
-find_ups_root()
+#find_ups_product( nutools )
 
 # macros for dictionary and simple_plugin
 include(ArtDictionary)

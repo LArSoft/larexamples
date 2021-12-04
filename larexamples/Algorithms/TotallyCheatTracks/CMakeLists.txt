@@ -5,6 +5,7 @@ art_make(
     ROOT::Core
     ROOT::Physics
     lardataobj_RecoBase
+    nusimdata::SimulationBase
   MODULE_LIBRARIES
     messagefacility::MF_MessageLogger
     ROOT::Core

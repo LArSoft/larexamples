@@ -1,4 +1,6 @@
-art_make()
+art_make(
+        LIB_LIBRARIES fhiclcpp::fhiclcpp
+        )
 
 install_fhicl()
 install_headers()

@@ -22,8 +22,12 @@ art_make(
     fhiclcpp::fhiclcpp
   )
 
-cet_test(PointIsolationAlg_test USE_BOOST_UNIT)
-cet_test(PointIsolationAlgRandom_test USE_BOOST_UNIT)
+cet_test(PointIsolationAlg_test
+         LIBRARIES cetlib::cetlib
+         USE_BOOST_UNIT)
+cet_test(PointIsolationAlgRandom_test
+         LIBRARIES cetlib::cetlib
+         USE_BOOST_UNIT)
 
 cet_test(
   PointIsolation_test
@@ -38,6 +42,8 @@ cet_test(
 # the time taken by the stress test should be short even with debug qualifier!
 cet_test(
   PointIsolationAlgStress_test
+  LIBRARIES
+    cetlib::cetlib
   TEST_ARGS 10000 0.05
   )
 
