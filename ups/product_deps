@@ -6,8 +6,8 @@ defaultqual	e20
 fcldir product_dir job
 #
 product         version
-larsim		v09_22_00
-cetbuildtools	v8_18_09	-	only_for_build
+larsim		v09_22_01
+cetbuildtools	v8_19_02	-	only_for_build
 end_product_list
 
 qualifier	larsim		notes
