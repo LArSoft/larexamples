@@ -15,6 +15,7 @@
 #include "larexamples/Algorithms/RemoveIsolatedSpacePoints/SpacePointIsolationAlg.h"
 #include "lardataobj/RecoBase/SpacePoint.h"
 #include "larcore/Geometry/Geometry.h"
+#include "larcore/CoreUtils/ServiceUtil.h"
 
 // framework libraries
 #include "art/Framework/Core/EDProducer.h"
