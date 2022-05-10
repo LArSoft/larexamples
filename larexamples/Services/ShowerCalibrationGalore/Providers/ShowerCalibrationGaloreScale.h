@@ -18,11 +18,15 @@
 #include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGalore.h"
 
 // framework libraries
+#include "fhiclcpp/ParameterSet.h"
 #include "fhiclcpp/types/Atom.h"
+#include "fhiclcpp/types/Comment.h"
+#include "fhiclcpp/types/Name.h"
 #include "fhiclcpp/types/Table.h"
 
 // C/C++ standard libraries
 #include <sstream>
+#include <string>
 
 
 namespace lar {

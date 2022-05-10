@@ -13,9 +13,12 @@
 
 
 // support libraries
-#include "fhiclcpp/fwd.h"
-#include "fhiclcpp/types/Table.h"
+namespace fhicl { class ParameterSet; }
+
 #include "fhiclcpp/types/Atom.h"
+#include "fhiclcpp/types/Comment.h"
+#include "fhiclcpp/types/Name.h"
+#include "fhiclcpp/types/Table.h"
 
 
 namespace lar {

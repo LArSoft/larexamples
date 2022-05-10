@@ -1,33 +1,42 @@
-art_make(
-  EXCLUDE
-    PointIsolationAlg_test.cc
-    PointIsolationAlgRandom_test.cc
-    PointIsolationAlgStress_test.cc
-  LIB_LIBRARIES
-    lardataobj_RecoBase
-    ROOT::Core
-  MODULE_LIBRARIES
-    lardataobj_RecoBase
-    larcorealg_Geometry
-    larcore_Geometry_Geometry_service
-    larexamples_Algorithms_RemoveIsolatedSpacePoints
-    test_Algorithms_RemoveIsolatedSpacePoints
-    art_Framework_Core
-    art::Framework_Services_Registry
-    art::Framework_Principal
-    art::Persistency_Provenance
-    art::Utilities canvas::canvas
-    messagefacility::MF_MessageLogger
-    
-    fhiclcpp::fhiclcpp
-  )
+cet_make_library(LIBRARY_NAME SpacePointTestUtils NO_INSTALL
+  SOURCE SpacePointTestUtils.cxx
+  LIBRARIES PUBLIC
+  lardataobj::RecoBase
+  larcorealg::Geometry
+)
 
-cet_test(PointIsolationAlg_test
-         LIBRARIES cetlib::cetlib
-         USE_BOOST_UNIT)
-cet_test(PointIsolationAlgRandom_test
-         LIBRARIES cetlib::cetlib
-         USE_BOOST_UNIT)
+cet_build_plugin(CheckDataProductSize art::EDAnalyzer NO_INSTALL
+  LIBRARIES PRIVATE
+  lardataobj::RecoBase
+  art::Framework_Principal
+  canvas::canvas
+  fhiclcpp::types
+  cetlib_except::cetlib_except
+)
+
+cet_build_plugin(SpacePointMaker art::EDProducer NO_INSTALL
+  LIBRARIES PRIVATE
+  larexamples::SpacePointTestUtils
+  larcore::Geometry_Geometry_service
+  larcore::ServiceUtil
+  lardataobj::RecoBase
+  art::Framework_Principal
+  messagefacility::MF_MessageLogger
+  fhiclcpp::types
+)
+
+cet_test(PointIsolationAlg_test USE_BOOST_UNIT
+  LIBRARIES PRIVATE
+  larexamples::Algorithms_RemoveIsolatedSpacePoints
+  cetlib::cetlib
+)
+
+cet_test(PointIsolationAlgRandom_test USE_BOOST_UNIT
+  LIBRARIES PRIVATE
+  larexamples::Algorithms_RemoveIsolatedSpacePoints
+  larcorealg::StopWatch
+  cetlib::cetlib
+)
 
 cet_test(
   PointIsolation_test
@@ -40,10 +49,10 @@ cet_test(
 
 # the following is not a real test in that it can't detect any error;
 # the time taken by the stress test should be short even with debug qualifier!
-cet_test(
-  PointIsolationAlgStress_test
-  LIBRARIES
-    cetlib::cetlib
+cet_test(PointIsolationAlgStress_test
+  LIBRARIES PRIVATE
+  larexamples::Algorithms_RemoveIsolatedSpacePoints
+  cetlib::cetlib
   TEST_ARGS 10000 0.05
   )
 

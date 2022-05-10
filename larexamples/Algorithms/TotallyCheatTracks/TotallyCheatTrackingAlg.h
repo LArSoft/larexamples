@@ -14,8 +14,7 @@
 // LArSoft libraries
 #include "larexamples/Algorithms/TotallyCheatTracks/CheatTrackData/CheatTrack.h"
 
-// nusimdata libraries
-#include "nusimdata/SimulationBase/MCParticle.h"
+namespace simb { class MCParticle; }
 
 namespace lar {
   namespace example {

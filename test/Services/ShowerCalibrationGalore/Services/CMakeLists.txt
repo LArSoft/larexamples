@@ -1,13 +1,13 @@
-simple_plugin(ShowerCalibrationGaloreTest "module"
-  lardataobj_RecoBase
-  art_Framework_Core
-  art::Framework_Services_Registry
-  art::Utilities canvas::canvas
-  mf_MessageLogger
-  fhiclcpp
-  cetlib::cetlib cetlib_except 
+cet_build_plugin(ShowerCalibrationGaloreTest art::EDAnalyzer NO_INSTALL
+  LIBRARIES PRIVATE
+  larexamples::ShowerCalibrationGalore
+  larexamples::ShowerCalibrationGaloreService
+  larexamples::ShowerCalibrationGaloreTests
+  art::Framework_Principal
+  canvas::canvas
+  messagefacility::MF_MessageLogger
+  fhiclcpp::types
 )
-
 
 cet_test(ShowerCalibrationGaloreScaleTest HANDBUILT
    DATAFILES ./test_shower_calibration_scale.fcl

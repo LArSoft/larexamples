@@ -1,8 +1,11 @@
-simple_plugin(RecoProxyUsageExample "module"
-              messagefacility::MF_MessageLogger
-              ROOT::Core
-              ${ROOT_GENVECTOR}
-              lardataobj_RecoBase
+cet_build_plugin(RecoProxyUsageExample art::EDAnalyzer
+  LIBRARIES PRIVATE
+  lardata::RecoBaseProxy
+  lardataobj::RecoBase
+  art::Framework_Principal
+  canvas::canvas
+  messagefacility::MF_MessageLogger
+  fhiclcpp::types
 )
 
 install_headers()

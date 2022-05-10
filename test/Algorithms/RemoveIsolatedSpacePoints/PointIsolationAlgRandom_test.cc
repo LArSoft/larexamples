@@ -17,6 +17,10 @@
  *
  */
 
+// Boost libraries
+#define BOOST_TEST_MODULE ( PointIsolationAlg_test )
+#include <boost/test/unit_test.hpp>
+
 // LArSoft libraries
 #include "larexamples/Algorithms/RemoveIsolatedSpacePoints/PointIsolationAlg.h"
 #include "larcorealg/TestUtils/StopWatch.h"
@@ -24,10 +28,6 @@
 // infrastructure and utilities
 #include "cetlib/pow.h" // cet::sum_squares()
 
-// Boost libraries
-#define BOOST_TEST_MODULE ( PointIsolationAlg_test )
-#include <cetlib/quiet_unit_test.hpp> // BOOST_AUTO_TEST_CASE()
-#include <boost/test/test_tools.hpp> // BOOST_CHECK(), BOOST_CHECK_EQUAL()
 
 // C/C++ standard libraries
 #include <array>

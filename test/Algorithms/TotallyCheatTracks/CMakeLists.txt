@@ -1,30 +1,24 @@
-simple_plugin(ParticleMaker "module"
-    nusimdata::SimulationBase
-    art_Framework_Core
-    art::Framework_Principal
-    art::Persistency_Provenance
-    canvas::canvas
-    messagefacility::MF_MessageLogger
-    fhiclcpp::fhiclcpp
-    ROOT::Core
-    ROOT::Physics
-  NO_INSTALL
-  )
+cet_build_plugin(ParticleMaker art::EDProducer NO_INSTALL
+  LIBRARIES PRIVATE
+  larcorealg::geo_vectors_utils
+  larcoreobj::geo_vectors
+  nusimdata::SimulationBase
+  messagefacility::MF_MessageLogger
+  fhiclcpp::types
+  ROOT::Physics
+)
 
-simple_plugin(DumpCheatTracks "module"
-    lardataobj_RecoBase
-    nusimdata::SimulationBase
-    art_Framework_Core
-    art::Framework_Principal
-    art::Persistency_Provenance
-    canvas::canvas
-    messagefacility::MF_MessageLogger
-    fhiclcpp::fhiclcpp
-    ROOT::Core
-    ROOT::EG
-  USE_BOOST_UNIT
-  NO_INSTALL
-  )
+cet_build_plugin(DumpCheatTracks art::EDAnalyzer NO_INSTALL
+  LIBRARIES PRIVATE
+  larexamples::CheatTrack
+  nusimdata::SimulationBase
+  art::Framework_Principal
+  canvas::canvas
+  messagefacility::MF_MessageLogger
+  fhiclcpp::types
+  cetlib_except::cetlib_except
+  Boost::unit_test_framework
+)
 
 cet_test(
   TotallyCheatTracker_test

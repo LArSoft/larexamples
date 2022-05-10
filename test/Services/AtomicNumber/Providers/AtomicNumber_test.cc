@@ -19,7 +19,6 @@
 #include "larcorealg/TestUtils/unit_test_base.h" // testing namespace
 
 // support libraries
-#include "fhiclcpp/fwd.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries

@@ -1,14 +1,10 @@
-simple_plugin(AtomicNumberTest "module"
-   art::Framework_Core
-   art::Framework_Core
-   art::Framework_Services_Registry
-   art::Utilities canvas::canvas
-   messagefacility::MF_MessageLogger
-   
-   fhiclcpp::fhiclcpp
-   cetlib::cetlib cetlib_except
+cet_build_plugin(AtomicNumberTest art::EDAnalyzer NO_INSTALL
+  LIBRARIES PRIVATE
+  larexamples::Services_AtomicNumber_Services_AtomicNumberService_service
+  larexamples::AtomicNumber
+  fhiclcpp::fhiclcpp
+  canvas::canvas
 )
-
 
 cet_test(AtomicNumberService_test HANDBUILT
    DATAFILES ./test_krypton_atomic_number.fcl

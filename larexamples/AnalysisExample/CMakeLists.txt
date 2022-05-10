@@ -52,17 +52,25 @@
 # that can be invoked as a procedure in a .fcl file) and the
 # libraries/resources needed to compile/execute the module.
 
-simple_plugin(AnalysisExample "module"
-              art::Framework_Services_Registry
-              art_root_io::TFileService_service
-              art_root_io::tfile_support
-              messagefacility::MF_MessageLogger
-              ROOT::Core
-              ROOT::Hist
-              ROOT::Physics
-              ROOT::Tree
-              larcorealg_Geometry
-              nusimdata::SimulationBase
+cet_build_plugin(AnalysisExample art::EDAnalyzer
+  LIBRARIES PRIVATE
+  larsim::Simulation
+  lardata::DetectorClocksService
+  larcore::Geometry_Geometry_service
+  larcore::ServiceUtil
+  lardataobj::RecoBase
+  lardataobj::Simulation
+  larcorealg::Geometry
+  nusimdata::SimulationBase
+  art_root_io::TFileService_service
+  art::Framework_Services_Registry
+  canvas::canvas
+  messagefacility::MF_MessageLogger
+  fhiclcpp::types
+  cetlib::cetlib
+  ROOT::Hist
+  ROOT::Physics
+  ROOT::Tree
 )
 
 # The above will create libraries in $MRB_INSTALL; these are the ".so"

@@ -19,13 +19,13 @@
 
 /// framework and utility libraries
 #include "fhiclcpp/types/Atom.h"
+#include "fhiclcpp/types/Comment.h"
+#include "fhiclcpp/types/Name.h"
 #include "fhiclcpp/types/Table.h"
-#include "cetlib_except/exception.h"
 
 // ROOT libraries
 #include "Math/Interpolator.h"
 #include "TDirectory.h"
-#include "TClass.h"
 #include "TH1.h"
 #include "TObject.h"
 

@@ -14,6 +14,9 @@
 // LArSoft libraries
 #include "larcorealg/Geometry/geo_vectors_utils.h" // geo::vect namespace
 
+// nusimdata libraries
+#include "nusimdata/SimulationBase/MCParticle.h"
+
 // C/C++ standard libraries
 #include <utility> // std::move()
 

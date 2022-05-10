@@ -1,18 +1,24 @@
 add_subdirectory(CheatTrackData)
 
-art_make(
-  LIB_LIBRARIES
-    ROOT::Core
-    ROOT::Physics
-    lardataobj_RecoBase
-    nusimdata::SimulationBase
-  MODULE_LIBRARIES
-    messagefacility::MF_MessageLogger
-    ROOT::Core
-    larexamples_Algorithms_TotallyCheatTracks
-    nusimdata::SimulationBase
-  )
+cet_make_library(SOURCE TotallyCheatTrackingAlg.cxx
+  LIBRARIES
+  PUBLIC
+  larexamples::CheatTrack
+  PRIVATE
+  larcorealg::Geometry
+  nusimdata::SimulationBase
+)
 
+cet_build_plugin(TotallyCheatTracker art::EDProducer
+  LIBRARIES PRIVATE
+  larexamples::Algorithms_TotallyCheatTracks
+  larexamples::CheatTrack
+  nusimdata::SimulationBase
+  art::Framework_Principal
+  canvas::canvas
+  messagefacility::MF_MessageLogger
+  fhiclcpp::types
+)
 install_headers()
 install_fhicl()
 
@@ -23,5 +29,3 @@ file(GLOB TESTFHICLFILES
      )
 install_source(EXTRAS ${TESTFHICLFILES})
 unset(TESTFHICLFILES)
-
-install_source()
