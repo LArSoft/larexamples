@@ -20,9 +20,9 @@
 
 namespace lar {
 
-   namespace example {
+  namespace example {
 
-      /**
+    /**
        * @brief Service giving access to AtomicNumber service provider.
        * @see AtomicNumber, @ref AtomicNumber "AtomicNumber example overview"
        * @ingroup AtomicNumber
@@ -34,14 +34,11 @@ namespace lar {
        *
        *
        */
-      using AtomicNumberService
-         = lar::SimpleServiceProviderWrapper<AtomicNumber>;
+    using AtomicNumberService = lar::SimpleServiceProviderWrapper<AtomicNumber>;
 
-   } // namespace example
+  } // namespace example
 } // namespace lar
 
-
 DECLARE_ART_SERVICE(lar::example::AtomicNumberService, LEGACY)
-
 
 #endif // LAREXAMPLES_SERVICES_ATOMICNUMBER_SERVICE_ATOMICNUMBERSERVICE_H

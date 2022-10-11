@@ -10,17 +10,16 @@
  */
 
 /// LArSoft libraries
+#include "larcore/CoreUtils/ServiceUtil.h" // lar::providerFrom() (for includers)
 #include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreScale.h"
 #include "larexamples/Services/ShowerCalibrationGalore/Services/ShowerCalibrationGaloreService.h"
-#include "larcore/CoreUtils/ServiceUtil.h" // lar::providerFrom() (for includers)
 
 // framework libraries
-#include "art/Framework/Services/Registry/ServiceTable.h"
 #include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
+#include "art/Framework/Services/Registry/ServiceTable.h"
 
 // C/C++ standard libraries
 #include <memory> // std::unique_ptr<>, std::make_unique()
-
 
 namespace lar {
   namespace example {
@@ -55,51 +54,39 @@ namespace lar {
      *   load this implementation.
      *
      */
-    class ShowerCalibrationGaloreScaleService:
-      public ShowerCalibrationGaloreService
-    {
+    class ShowerCalibrationGaloreScaleService : public ShowerCalibrationGaloreService {
 
-         public:
-       /// type of service provider implementation
-       using concrete_provider_type = ShowerCalibrationGaloreScale;
+    public:
+      /// type of service provider implementation
+      using concrete_provider_type = ShowerCalibrationGaloreScale;
 
-       /// art service interface class
-       using service_interface_type = ShowerCalibrationGaloreService;
+      /// art service interface class
+      using service_interface_type = ShowerCalibrationGaloreService;
 
-       /// Type of configuration parameter (for art description)
-       using Parameters
-         = art::ServiceTable<typename ShowerCalibrationGaloreScale::Config>;
+      /// Type of configuration parameter (for art description)
+      using Parameters = art::ServiceTable<typename ShowerCalibrationGaloreScale::Config>;
 
+      /// Constructor (using a configuration table)
+      ShowerCalibrationGaloreScaleService(Parameters const& config, art::ActivityRegistry&)
+        : prov(std::make_unique<ShowerCalibrationGaloreScale>(config()))
+      {}
 
-       /// Constructor (using a configuration table)
-       ShowerCalibrationGaloreScaleService
-         (Parameters const& config, art::ActivityRegistry&)
-         : prov(std::make_unique<ShowerCalibrationGaloreScale>(config()))
-         {}
+    private:
+      std::unique_ptr<ShowerCalibrationGaloreScale> prov; ///< service provider
 
-
-          private:
-       std::unique_ptr<ShowerCalibrationGaloreScale> prov; ///< service provider
-
-       /// Returns a constant pointer to the service provider
-       virtual ShowerCalibrationGalore const* do_provider() const override
-         { return prov.get(); }
+      /// Returns a constant pointer to the service provider
+      virtual ShowerCalibrationGalore const* do_provider() const override { return prov.get(); }
 
     }; // ShowerCalibrationGaloreScaleService
 
   } // namespace example
 } // namespace lar
 
-
-DECLARE_ART_SERVICE_INTERFACE_IMPL(
-  lar::example::ShowerCalibrationGaloreScaleService,
-  lar::example::ShowerCalibrationGaloreService,
-  LEGACY
-  )
+DECLARE_ART_SERVICE_INTERFACE_IMPL(lar::example::ShowerCalibrationGaloreScaleService,
+                                   lar::example::ShowerCalibrationGaloreService,
+                                   LEGACY)
 
 #include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 
-DEFINE_ART_SERVICE_INTERFACE_IMPL(
-  lar::example::ShowerCalibrationGaloreScaleService,
-  lar::example::ShowerCalibrationGaloreService
-  )
+DEFINE_ART_SERVICE_INTERFACE_IMPL(lar::example::ShowerCalibrationGaloreScaleService,
+                                  lar::example::ShowerCalibrationGaloreService)

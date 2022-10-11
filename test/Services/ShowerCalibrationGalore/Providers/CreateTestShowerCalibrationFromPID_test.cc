@@ -17,30 +17,28 @@
  *
  */
 
-
 // LArSoft libraries
 #include "test/Services/ShowerCalibrationGalore/Providers/CreateTestShowerCalibrationFromPID.h"
 
 // C/C++ standard libraries
 #include <string>
 
+int main(int argc, char** argv)
+{
 
-int main(int argc, char** argv) {
+  //
+  // argument parsing
+  //
+  std::string OutputFilePath = "ShowerCalibrationTestFromPID.root:Test";
 
-   //
-   // argument parsing
-   //
-   std::string OutputFilePath = "ShowerCalibrationTestFromPID.root:Test";
+  char** param = argv + 1;
+  char** endparam = argv + argc;
 
-   char** param    = argv + 1;
-   char** endparam = argv + argc;
+  if (param < endparam) OutputFilePath = *param;
 
-   if (param < endparam) OutputFilePath = *param;
-
-   //
-   // run
-   //
-   return
-     lar::example::tests::CreateTestShowerCalibrationFromPID(OutputFilePath);
+  //
+  // run
+  //
+  return lar::example::tests::CreateTestShowerCalibrationFromPID(OutputFilePath);
 
 } // main()

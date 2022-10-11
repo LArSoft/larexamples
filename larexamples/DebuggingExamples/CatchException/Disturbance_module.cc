@@ -6,13 +6,11 @@
  * @ingroup CatchException
  */
 
-
 // framework libraries
 #include "art/Framework/Core/EDProducer.h"
 #include "art/Framework/Core/ModuleMacros.h"
 #include "canvas/Utilities/Exception.h"
 #include "fhiclcpp/types/Atom.h"
-
 
 namespace lar {
   namespace example {
@@ -30,15 +28,12 @@ namespace lar {
      * * *NArtExceptions* (integer, mandatory): number of exceptions to throw
      *
      */
-    class Disturbance: public art::EDProducer {
-        public:
-
+    class Disturbance : public art::EDProducer {
+    public:
       struct Config {
 
-        fhicl::Atom<unsigned int> NArtExceptions {
-          fhicl::Name("NArtExceptions"),
-          fhicl::Comment("number of exceptions to throw")
-          };
+        fhicl::Atom<unsigned int> NArtExceptions{fhicl::Name("NArtExceptions"),
+                                                 fhicl::Comment("number of exceptions to throw")};
 
       }; // struct Config
 
@@ -50,9 +45,7 @@ namespace lar {
       /// Executes the iterations.
       virtual void produce(art::Event&) override;
 
-
-        private:
-
+    private:
       unsigned int fNArtExceptions;
 
       /// Throws a `std::out_of_range` exception.
@@ -60,19 +53,17 @@ namespace lar {
 
     }; // class Disturbance
 
-
   } // namespace example
 } // namespace lar
 
 //------------------------------------------------------------------------------
 lar::example::Disturbance::Disturbance(Parameters const& config)
-  : EDProducer{config}
-  , fNArtExceptions(config().NArtExceptions())
-  {}
-
+  : EDProducer{config}, fNArtExceptions(config().NArtExceptions())
+{}
 
 //------------------------------------------------------------------------------
-void lar::example::Disturbance::produce(art::Event&) {
+void lar::example::Disturbance::produce(art::Event&)
+{
 
   //
   // art::Exception
@@ -81,23 +72,21 @@ void lar::example::Disturbance::produce(art::Event&) {
     try {
       throwArtException();
     }
-    catch (art::Exception const&) {}
+    catch (art::Exception const&) {
+    }
   } // for
 
 } // lar::example::Disturbance::produce()
 
-
 //------------------------------------------------------------------------------
-void lar::example::Disturbance::throwArtException() {
+void lar::example::Disturbance::throwArtException()
+{
 
-  throw art::Exception(art::errors::LogicError)
-    << "I want to annoy you.\n";
+  throw art::Exception(art::errors::LogicError) << "I want to annoy you.\n";
 
 } // lar::example::Disturbance::throwArtException()
 
-
 //------------------------------------------------------------------------------
 DEFINE_ART_MODULE(lar::example::Disturbance)
-
 
 //------------------------------------------------------------------------------

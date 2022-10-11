@@ -14,16 +14,14 @@
 #ifndef TEST_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_CREATETESTSHOWERCALIBRATIONFROMPID
 #define TEST_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_CREATETESTSHOWERCALIBRATIONFROMPID
 
-
 // C/C++ standard libraries
 #include <string>
 
-
 namespace lar {
-namespace example {
-namespace tests {
+  namespace example {
+    namespace tests {
 
-/**
+      /**
  * @brief Creates a test calibration file for ShowerCalibrationGaloreFromPID
  * @param outputPath UNIX + ROOT path for the output ROOT directory
  * @return an error code, 0 on success
@@ -48,12 +46,10 @@ namespace tests {
  *   other particle calibration vs. reconstructed energy, [ 0; 5 ] GeV range
  *
  */
-int CreateTestShowerCalibrationFromPID(std::string outputPath);
+      int CreateTestShowerCalibrationFromPID(std::string outputPath);
 
-} // namespace tests
-} // namespace example
+    } // namespace tests
+  }   // namespace example
 } // namespace lar
-
-
 
 #endif // TEST_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_CREATETESTSHOWERCALIBRATIONFROMPID

@@ -14,11 +14,12 @@
 // LArSoft libraries
 #include "larexamples/Algorithms/TotallyCheatTracks/CheatTrackData/CheatTrack.h"
 
-namespace simb { class MCParticle; }
+namespace simb {
+  class MCParticle;
+}
 
 namespace lar {
   namespace example {
-
 
     /**
      * @brief Reconstructs tracks from simulated particles.
@@ -58,12 +59,11 @@ namespace lar {
      */
     class TotallyCheatTrackingAlg {
 
-        public:
+    public:
       struct Config {};
 
       /// Constructor: accepts a configuration (currently unused).
       TotallyCheatTrackingAlg(Config const&) {}
-
 
       /// Set up the algorithm (currently no operation).
       void setup() {}
@@ -76,16 +76,11 @@ namespace lar {
        * The reconstucted track has one trajectory point per trajectory
        * point of the input particle.
        */
-      lar::example::CheatTrack makeTrack
-        (simb::MCParticle const& mcParticle) const;
-
+      lar::example::CheatTrack makeTrack(simb::MCParticle const& mcParticle) const;
 
     }; // class TotallyCheatTrackingAlg
 
-
   } // namespace example
 } // namespace lar
-
-
 
 #endif // LAREXAMPLES_ALGORITHMS_TOTALLYCHEATTRACKS_TOTALLYCHEATTRACKINGALG_H

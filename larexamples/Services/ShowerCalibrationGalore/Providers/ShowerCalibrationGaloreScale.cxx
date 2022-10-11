@@ -9,9 +9,7 @@
  * Implementation file. Nothing needed here.
  */
 
-
 /// LArSoft libraries
 #include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreScale.h"
-
 
 //------------------------------------------------------------------------------

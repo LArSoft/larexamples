@@ -18,25 +18,23 @@
  */
 
 // Boost libraries
-#define BOOST_TEST_MODULE ( PointIsolationAlg_test )
+#define BOOST_TEST_MODULE (PointIsolationAlg_test)
 #include <boost/test/unit_test.hpp>
 
 // LArSoft libraries
-#include "larexamples/Algorithms/RemoveIsolatedSpacePoints/PointIsolationAlg.h"
 #include "larcorealg/TestUtils/StopWatch.h"
+#include "larexamples/Algorithms/RemoveIsolatedSpacePoints/PointIsolationAlg.h"
 
 // infrastructure and utilities
 #include "cetlib/pow.h" // cet::sum_squares()
 
-
 // C/C++ standard libraries
-#include <array>
-#include <random>
-#include <chrono>
-#include <ratio> // std::milli
-#include <iostream>
 #include <algorithm> // std::sort()
-
+#include <array>
+#include <chrono>
+#include <iostream>
+#include <random>
+#include <ratio> // std::milli
 
 // BEGIN RemoveIsolatedSpacePoints group ---------------------------------------
 /// @ingroup RemoveIsolatedSpacePoints
@@ -54,9 +52,8 @@
  *
  */
 template <typename Engine, typename Coord = float>
-void PointIsolationTest(
-  Engine& generator, unsigned int nPoints, std::vector<Coord> const& radii
-) {
+void PointIsolationTest(Engine& generator, unsigned int nPoints, std::vector<Coord> const& radii)
+{
 
   using Coord_t = Coord;
 
@@ -71,12 +68,11 @@ void PointIsolationTest(
 
   points.reserve(nPoints);
   for (unsigned int i = 0; i < nPoints; ++i)
-    points.push_back({{ randomCoord(), randomCoord(), randomCoord() }});
-  std::cout
-    << "\n" << std::string(75, '=')
-    << "\nTest with " << nPoints << " points"
-    << "\n" << std::string(72, '-')
-    << std::endl;
+    points.push_back({{randomCoord(), randomCoord(), randomCoord()}});
+  std::cout << "\n"
+            << std::string(75, '=') << "\nTest with " << nPoints << " points"
+            << "\n"
+            << std::string(72, '-') << std::endl;
 
   //
   // create the algorithm
@@ -84,11 +80,11 @@ void PointIsolationTest(
   using PointIsolationAlg_t = lar::example::PointIsolationAlg<Coord_t>;
 
   typename PointIsolationAlg_t::Configuration_t config;
-  config.rangeX = { -2., +2. };
-  config.rangeY = { -2., +2. };
-  config.rangeZ = { -2., +2. };
+  config.rangeX = {-2., +2.};
+  config.rangeY = {-2., +2.};
+  config.rangeZ = {-2., +2.};
   config.radius2 = 1.;
-//  config.maxMemory = 100 * 1048576; // we keep the default memory setting
+  //  config.maxMemory = 100 * 1048576; // we keep the default memory setting
   PointIsolationAlg_t algo(config);
 
   //
@@ -97,7 +93,7 @@ void PointIsolationTest(
 
   // measurement in milliseconds, double precision:
   testing::StopWatch<std::chrono::duration<double, std::milli>> timer;
-  for (Coord_t radius: radii) {
+  for (Coord_t radius : radii) {
 
     //
     // set up the algorithm
@@ -111,12 +107,10 @@ void PointIsolationTest(
     // run the algorithm with the brute force approach
     //
     timer.restart();
-    auto expected
-      = algo.bruteRemoveIsolatedPoints(points.begin(), points.end());
+    auto expected = algo.bruteRemoveIsolatedPoints(points.begin(), points.end());
     auto elapsed = timer.elapsed();
     std::sort(expected.begin(), expected.end());
-    std::cout << "  brute force: " << elapsed << " ms"
-      << std::endl;
+    std::cout << "  brute force: " << elapsed << " ms" << std::endl;
 
     //
     // run the algorithm with the default approach
@@ -125,8 +119,7 @@ void PointIsolationTest(
     auto actual = algo.removeIsolatedPoints(points);
     elapsed = timer.elapsed();
     std::sort(actual.begin(), actual.end());
-    std::cout << "  regular:     " << elapsed << " ms"
-      << std::endl;
+    std::cout << "  regular:     " << elapsed << " ms" << std::endl;
 
     //
     // sort and compare the results
@@ -139,7 +132,6 @@ void PointIsolationTest(
 
 } // PointIsolationTest()
 
-
 //------------------------------------------------------------------------------
 //--- tests
 //
@@ -147,13 +139,13 @@ struct ArgsFixture {
   ArgsFixture()
     : argc(boost::unit_test::framework::master_test_suite().argc)
     , argv(boost::unit_test::framework::master_test_suite().argv)
-    {}
+  {}
   int argc;
-  char **argv;
+  char** argv;
 }; // ArgsFixture
 
-
-BOOST_FIXTURE_TEST_CASE(PointIsolationTestCase, ArgsFixture) {
+BOOST_FIXTURE_TEST_CASE(PointIsolationTestCase, ArgsFixture)
+{
 
   // we explicitly set the seed, even if with a default value
   auto seed = std::default_random_engine::default_seed;
@@ -162,10 +154,7 @@ BOOST_FIXTURE_TEST_CASE(PointIsolationTestCase, ArgsFixture) {
     std::istringstream sstr;
     sstr.str(argv[1]);
     sstr >> seed;
-    if (!sstr) {
-      throw std::runtime_error
-        ("Invalid seed specified: " + std::string(argv[1]));
-    }
+    if (!sstr) { throw std::runtime_error("Invalid seed specified: " + std::string(argv[1])); }
   } // if seed specified
 
   // this engine can be arbitrarily crappy; don't use it for real physics!
@@ -173,14 +162,13 @@ BOOST_FIXTURE_TEST_CASE(PointIsolationTestCase, ArgsFixture) {
   std::cout << "Random seed: " << seed << std::endl;
 
   // try all these isolation radii
-  std::vector<float>        const Radii { 0.05, 0.1, 0.5, 2.0 };
-  std::vector<unsigned int> const DataSizes { 100, 10000 };
+  std::vector<float> const Radii{0.05, 0.1, 0.5, 2.0};
+  std::vector<unsigned int> const DataSizes{100, 10000};
 
-  for (unsigned int nPoints: DataSizes)
+  for (unsigned int nPoints : DataSizes)
     PointIsolationTest(generator, nPoints, Radii);
 
 } // PointIsolationTestCase()
-
 
 /// @}
 // END RemoveIsolatedSpacePoints group -----------------------------------------

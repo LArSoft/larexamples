@@ -22,18 +22,17 @@
  */
 
 // LArSoft libraries
-#include "larexamples/Algorithms/RemoveIsolatedSpacePoints/PointIsolationAlg.h"
 #include "cetlib/pow.h"
+#include "larexamples/Algorithms/RemoveIsolatedSpacePoints/PointIsolationAlg.h"
 
 // Boost libraries
-#define BOOST_TEST_MODULE ( PointIsolationAlg_test )
+#define BOOST_TEST_MODULE (PointIsolationAlg_test)
 #include "boost/test/unit_test.hpp"
 
 // C/C++ standard libraries
-#include <array>
 #include <algorithm> // std::sort()
+#include <array>
 #include <numeric> // std::iota()
-
 
 // BEGIN RemoveIsolatedSpacePoints group ---------------------------------------
 /// @ingroup RemoveIsolatedSpacePoints
@@ -51,7 +50,8 @@
  * This test uses coordinate type `float`.
  *
  */
-void PointIsolationTest1() {
+void PointIsolationTest1()
+{
 
   using Coord_t = float;
   using PointIsolationAlg_t = lar::example::PointIsolationAlg<Coord_t>;
@@ -60,9 +60,9 @@ void PointIsolationTest1() {
 
   PointIsolationAlg_t::Configuration_t config;
   config.radius2 = cet::square(1.);
-  config.rangeX = { -2., +2. };
-  config.rangeY = { -2., +2. };
-  config.rangeZ = { -2., +2. };
+  config.rangeX = {-2., +2.};
+  config.rangeY = {-2., +2.};
+  config.rangeZ = {-2., +2.};
 
   std::vector<Point_t> points;
   std::vector<size_t> result, expected;
@@ -70,36 +70,33 @@ void PointIsolationTest1() {
   PointIsolationAlg_t algo(config);
 
   // first test: a single point
-  points.push_back({{ +1., +1., +1. }});
+  points.push_back({{+1., +1., +1.}});
   expected.clear();
 
   result = algo.removeIsolatedPoints(points);
   std::sort(result.begin(), result.end());
   BOOST_TEST(result == expected, boost::test_tools::per_element());
-
 
   // second test: two far points
-  points.push_back({{ -1., -1., -1. }});
+  points.push_back({{-1., -1., -1.}});
   expected.clear();
 
   result = algo.removeIsolatedPoints(points);
   std::sort(result.begin(), result.end());
   BOOST_TEST(result == expected, boost::test_tools::per_element());
 
-
   // third test: two close points, another isolated
-  points.push_back({{ +0.5, +1.0, +1.0 }});
-  expected.insert(expected.end(), { 0U, 2U });
+  points.push_back({{+0.5, +1.0, +1.0}});
+  expected.insert(expected.end(), {0U, 2U});
   std::sort(expected.begin(), expected.end());
 
   result = algo.removeIsolatedPoints(points);
   std::sort(result.begin(), result.end());
   BOOST_TEST(result == expected, boost::test_tools::per_element());
 
-
   // fourth test: two close points, another two also close
-  points.push_back({{ -0.5, -1.0, -1.0 }});
-  expected.insert(expected.end(), { 1U, 3U });
+  points.push_back({{-0.5, -1.0, -1.0}});
+  expected.insert(expected.end(), {1U, 3U});
   std::sort(expected.begin(), expected.end());
 
   result = algo.removeIsolatedPoints(points);
@@ -107,7 +104,6 @@ void PointIsolationTest1() {
   BOOST_TEST(result == expected, boost::test_tools::per_element());
 
 } // PointIsolationTest1()
-
 
 //------------------------------------------------------------------------------
 /**
@@ -132,8 +128,7 @@ void PointIsolationTest1() {
  *
  */
 template <typename T>
-auto CreateStarOfPoints(unsigned int nShells, T distance = T(1))
-  -> decltype(auto)
+auto CreateStarOfPoints(unsigned int nShells, T distance = T(1)) -> decltype(auto)
 {
 
   using Coord_t = T;
@@ -144,21 +139,20 @@ auto CreateStarOfPoints(unsigned int nShells, T distance = T(1))
 
   // fill shell by shell
   while (nShells-- > 0) {
-    points.push_back({{  distance,        0.,        0. }});
-    points.push_back({{ -distance,        0.,        0. }});
-    points.push_back({{        0.,  distance,        0. }});
-    points.push_back({{        0., -distance,        0. }});
-    points.push_back({{        0.,        0.,  distance }});
-    points.push_back({{        0.,        0., -distance }});
+    points.push_back({{distance, 0., 0.}});
+    points.push_back({{-distance, 0., 0.}});
+    points.push_back({{0., distance, 0.}});
+    points.push_back({{0., -distance, 0.}});
+    points.push_back({{0., 0., distance}});
+    points.push_back({{0., 0., -distance}});
     distance /= 2;
   } // while
 
   // add the origin
-  points.push_back({{ 0., 0., 0. }});
+  points.push_back({{0., 0., 0.}});
 
   return points;
 } // CreateStarOfPoints()
-
 
 /**
  * @brief Tests various isolation radii on a star-distributed set of points
@@ -174,7 +168,8 @@ auto CreateStarOfPoints(unsigned int nShells, T distance = T(1))
  * This test uses coordinate type `double`.
  *
  */
-void PointIsolationTest2(unsigned int levels) {
+void PointIsolationTest2(unsigned int levels)
+{
 
   using Coord_t = double;
   using PointIsolationAlg_t = lar::example::PointIsolationAlg<Coord_t>;
@@ -192,9 +187,9 @@ void PointIsolationTest2(unsigned int levels) {
   //
   PointIsolationAlg_t::Configuration_t config;
   config.radius2 = cet::square(1.);
-  config.rangeX = { -2., +2. };
-  config.rangeY = { -2., +2. };
-  config.rangeZ = { -2., +2. };
+  config.rangeX = {-2., +2.};
+  config.rangeY = {-2., +2.};
+  config.rangeZ = {-2., +2.};
   PointIsolationAlg_t algo(config);
 
   //
@@ -228,14 +223,12 @@ void PointIsolationTest2(unsigned int levels) {
     config.radius2 = cet::square(baseRadius + epsilonStep);
     algo.reconfigure(config);
 
-    BOOST_TEST_MESSAGE
-      ("[" << level <<"] testing with radius " << (baseRadius + epsilonStep));
+    BOOST_TEST_MESSAGE("[" << level << "] testing with radius " << (baseRadius + epsilonStep));
 
     // we expect to progressively have less and less non-isolated points...
-    unsigned int const nExpected = (level > 1)? (1 + level * nSemiDirections): 0;
+    unsigned int const nExpected = (level > 1) ? (1 + level * nSemiDirections) : 0;
     // ... and we expect those points to be the first ones in the collection
-    std::vector<size_t> expected
-      (expectedBase.end() - nExpected, expectedBase.end());
+    std::vector<size_t> expected(expectedBase.end() - nExpected, expectedBase.end());
 
     std::vector<size_t> result = algo.removeIsolatedPoints(points);
     BOOST_TEST(result.size() == expected.size());
@@ -248,19 +241,18 @@ void PointIsolationTest2(unsigned int levels) {
 
 } // PointIsolationTest2()
 
-
 //------------------------------------------------------------------------------
 //--- tests
 //
-BOOST_AUTO_TEST_CASE(PointIsolationAlgTest) {
+BOOST_AUTO_TEST_CASE(PointIsolationAlgTest)
+{
   PointIsolationTest1();
 } // PointIsolationAlgTest()
 
-
-BOOST_AUTO_TEST_CASE(PointIsolationAlgVerificationTest) {
+BOOST_AUTO_TEST_CASE(PointIsolationAlgVerificationTest)
+{
   PointIsolationTest2(5);
 } // PointIsolationAlgVerificationTest()
-
 
 /// @}
 // END RemoveIsolatedSpacePoints group -----------------------------------------

@@ -13,12 +13,11 @@
  *
  */
 
-
 // LArSoft libraries
-#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreFromPID.h"
-#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGalore.h"
-#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreFromPIDTestHelpers.h"
 #include "larcorealg/TestUtils/unit_test_base.h"
+#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGalore.h"
+#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreFromPID.h"
+#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreFromPIDTestHelpers.h"
 #include "test/Services/ShowerCalibrationGalore/Providers/CreateTestShowerCalibrationFromPID.h"
 #include "test/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreTests.h"
 
@@ -29,9 +28,9 @@
 #include <string>
 #include <vector>
 
-
 //------------------------------------------------------------------------------
-int main() {
+int main()
+{
 
   //
   // prepare the test environment
@@ -39,15 +38,12 @@ int main() {
 
   // create a test calibration file on the spot
   std::string const CalibrationFullPath = "TestCalibration.root:Showers";
-  lar::example::tests::CreateTestShowerCalibrationFromPID
-    (CalibrationFullPath);
+  lar::example::tests::CreateTestShowerCalibrationFromPID(CalibrationFullPath);
 
   // provide a test name and a push a configuration for
   // "ShowerCalibrationGaloreService" ("service_provider" is inconsequential)
-  testing::BasicEnvironmentConfiguration config
-    ("ShowerCalibrationGaloreFromPID_test");
-  config.AddDefaultServiceConfiguration
-    ("ShowerCalibrationGaloreService", R"(
+  testing::BasicEnvironmentConfiguration config("ShowerCalibrationGaloreFromPID_test");
+  config.AddDefaultServiceConfiguration("ShowerCalibrationGaloreService", R"(
     service_provider: "ShowerCalibrationGaloreFromPIDService"
     CalibrationFile: ")" + CalibrationFullPath + R"("
     )");
@@ -65,20 +61,20 @@ int main() {
   unsigned int nErrors = 0; // error count
 
   // get the provider we just set up (but accessing it by the interface)ß
-  auto const* Calibration
-    = TesterEnv.Provider<lar::example::ShowerCalibrationGalore>();
+  auto const* Calibration = TesterEnv.Provider<lar::example::ShowerCalibrationGalore>();
 
   //
   // run the test
   //
   nErrors += lar::example::tests::ShowerCalibrationTableTest(
     mf::LogVerbatim("ShowerCalibrationGaloreFromPID_test"),
-    Calibration, 0.0, 2.5, 0.1,
-    { 11, 13, -11, -13, 211, 111, 2112, 2212, 22 }
-  );
+    Calibration,
+    0.0,
+    2.5,
+    0.1,
+    {11, 13, -11, -13, 211, 111, 2112, 2212, 22});
 
-  mf::LogInfo("ShowerCalibrationGaloreFromPID_test")
-    << Calibration->report() << std::endl;
+  mf::LogInfo("ShowerCalibrationGaloreFromPID_test") << Calibration->report() << std::endl;
 
   return nErrors;
 } // main()

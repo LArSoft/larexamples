@@ -9,20 +9,19 @@
 
 // LArSoft libraries
 #include "SpacePointTestUtils.h"
-#include "lardataobj/RecoBase/SpacePoint.h"
-#include "larcore/Geometry/Geometry.h"
 #include "larcore/CoreUtils/ServiceUtil.h"
+#include "larcore/Geometry/Geometry.h"
+#include "lardataobj/RecoBase/SpacePoint.h"
 
 // framework libraries
 #include "art/Framework/Core/EDProducer.h"
 #include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Principal/Event.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "fhiclcpp/types/Atom.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
 #include <memory> // std::make_unique()
-
 
 namespace lar {
   namespace example {
@@ -47,19 +46,15 @@ namespace lar {
        * * *spacing* (real, _mandatory_): spacing between the points [cm]
        *
        */
-      class SpacePointMaker: public art::EDProducer {
+      class SpacePointMaker : public art::EDProducer {
 
-          public:
-
+      public:
         struct Config {
 
-          using Name    = fhicl::Name;
+          using Name = fhicl::Name;
           using Comment = fhicl::Comment;
 
-          fhicl::Atom<double> spacing{
-            Name("spacing"),
-            Comment("spacing between points [cm]")
-            };
+          fhicl::Atom<double> spacing{Name("spacing"), Comment("spacing between points [cm]")};
 
         }; // Config
 
@@ -71,8 +66,7 @@ namespace lar {
         /// Create and add the points on each event (although they are the same)
         virtual void produce(art::Event& event) override;
 
-          private:
-
+      private:
         double spacing; ///< step size [cm]
 
       }; // class SpacePointMaker
@@ -80,26 +74,23 @@ namespace lar {
       /// @}
       // END RemoveIsolatedSpacePoints group -----------------------------------
 
-
     } // namespace tests
-  } // namespace example
+  }   // namespace example
 } // namespace lar
-
 
 //------------------------------------------------------------------------------
 //--- module implementation
 //---
 
 lar::example::tests::SpacePointMaker::SpacePointMaker(Parameters const& config)
-  : EDProducer{config}
-  , spacing(config().spacing())
+  : EDProducer{config}, spacing(config().spacing())
 {
   produces<std::vector<recob::SpacePoint>>();
 } // lar::example::tests::SpacePointMaker::SpacePointMaker()
 
-
 //------------------------------------------------------------------------------
-void lar::example::tests::SpacePointMaker::produce(art::Event& event) {
+void lar::example::tests::SpacePointMaker::produce(art::Event& event)
+{
 
   //
   // set up
@@ -116,7 +107,7 @@ void lar::example::tests::SpacePointMaker::produce(art::Event& event) {
   //
 
   // fill each TPC independently
-  for (auto const& TPC: geom->IterateTPCs()) {
+  for (auto const& TPC : geom->IterateTPCs()) {
 
     FillSpacePointGrid(*spacePoints, TPC, spacing);
 
@@ -125,14 +116,12 @@ void lar::example::tests::SpacePointMaker::produce(art::Event& event) {
   //
   // result storage
   //
-  mf::LogInfo("SpacePointMaker")
-    << "Created " << spacePoints->size() << " space points using spacing "
-    << spacing << " cm";
+  mf::LogInfo("SpacePointMaker") << "Created " << spacePoints->size()
+                                 << " space points using spacing " << spacing << " cm";
 
   event.put(std::move(spacePoints));
 
 } // lar::example::tests::SpacePointMaker::produce()
-
 
 //------------------------------------------------------------------------------
 DEFINE_ART_MODULE(lar::example::tests::SpacePointMaker)

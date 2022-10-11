@@ -19,14 +19,13 @@
 #include "cetlib/pow.h" // cet::sum_squares()
 
 // C/C++ standard libraries
-#include <cassert> // assert()
-#include <cmath> // std::sqrt()
-#include <vector>
 #include <array>
-#include <string>
-#include <iterator> // std::cbegin(), std::cend(), std::distance()
+#include <cassert>   // assert()
+#include <cmath>     // std::sqrt()
+#include <iterator>  // std::cbegin(), std::cend(), std::distance()
 #include <stdexcept> // std::runtime_error
-
+#include <string>
+#include <vector>
 
 namespace lar {
   namespace example {
@@ -126,21 +125,20 @@ namespace lar {
     template <typename Coord = double>
     class PointIsolationAlg {
 
-        public:
+    public:
       /// Type of coordinate
       using Coord_t = Coord;
       using Range_t = CoordRange<Coord_t>;
 
       /// Type containing all configuration parameters of the algorithm
       struct Configuration_t {
-        Range_t rangeX;   ///< range in X of the covered volume
-        Range_t rangeY;   ///< range in Y of the covered volume
-        Range_t rangeZ;   ///< range in Z of the covered volume
-        Coord_t radius2;  ///< square of isolation radius [cm^2]
+        Range_t rangeX;  ///< range in X of the covered volume
+        Range_t rangeY;  ///< range in Y of the covered volume
+        Range_t rangeZ;  ///< range in Z of the covered volume
+        Coord_t radius2; ///< square of isolation radius [cm^2]
         size_t maxMemory = 100 * 1048576;
-                          ///< grid smaller than this number of bytes (100 MiB)
+        ///< grid smaller than this number of bytes (100 MiB)
       }; // Configuration_t
-
 
       /// @{
       /// @name Configuration
@@ -152,23 +150,18 @@ namespace lar {
        * For the configuration, see `SpacePointIsolationAlg` documentation.
        * No validation is performed on the configuration.
        */
-      PointIsolationAlg(Configuration_t const& first_config)
-        : config(first_config)
-        {}
+      PointIsolationAlg(Configuration_t const& first_config) : config(first_config) {}
 
       /// Reconfigures the algorithm with the specified configuration
       /// (no validation is performed)
       /// @see configuration()
-      void reconfigure(Configuration_t const& new_config)
-        { config = new_config; }
-
+      void reconfigure(Configuration_t const& new_config) { config = new_config; }
 
       /// Returns a constant reference to the current configuration
       /// @see reconfigure()
       Configuration_t& configuration() const { return config; }
 
       /// @}
-
 
       /**
        * @brief Returns the set of points that are not isolated
@@ -188,9 +181,7 @@ namespace lar {
        * `PositionExtractor` object is available for it.
        */
       template <typename PointIter>
-      std::vector<size_t> removeIsolatedPoints
-        (PointIter begin, PointIter end) const;
-
+      std::vector<size_t> removeIsolatedPoints(PointIter begin, PointIter end) const;
 
       /**
        * @brief Returns the set of points that are not isolated
@@ -199,9 +190,10 @@ namespace lar {
        * @see removeIsolatedPoints(PointIter begin, PointIter end) const
        */
       template <typename Cont>
-      std::vector<size_t> removeIsolatedPoints (Cont const& points) const
-        { return removeIsolatedPoints(std::cbegin(points), std::cend(points)); }
-
+      std::vector<size_t> removeIsolatedPoints(Cont const& points) const
+      {
+        return removeIsolatedPoints(std::cbegin(points), std::cend(points));
+      }
 
       /**
        * @brief Brute-force reference algorithm
@@ -217,9 +209,7 @@ namespace lar {
        * Use this only for tests.
        */
       template <typename PointIter>
-      std::vector<size_t> bruteRemoveIsolatedPoints
-        (PointIter begin, PointIter end) const;
-
+      std::vector<size_t> bruteRemoveIsolatedPoints(PointIter begin, PointIter end) const;
 
       /// @{
       /// @name Configuration
@@ -230,13 +220,10 @@ namespace lar {
 
       /// @}
 
-
       /// Returns the maximum optimal cell size when using a isolation radius
-      static Coord_t maximumOptimalCellSize(Coord_t radius)
-        { return radius / std::sqrt(3.); }
+      static Coord_t maximumOptimalCellSize(Coord_t radius) { return radius / std::sqrt(3.); }
 
-
-        private:
+    private:
       /// type managing cell indices
       using Indexer_t = ::util::GridContainer3DIndices; // same in GridContainer
 
@@ -249,49 +236,41 @@ namespace lar {
       template <typename PointIter>
       using Point_t = decltype(*PointIter());
 
-
       Configuration_t config; ///< all configuration data
-
 
       /// Computes the cell size to be used
       template <typename PointIter = std::array<double, 3> const*>
       Coord_t computeCellSize() const;
 
-
       /// Returns a list of cell offsets for the neighbourhood of given radius
-      NeighAddresses_t buildNeighborhood
-        (Indexer_t const& indexer, unsigned int neighExtent) const;
+      NeighAddresses_t buildNeighborhood(Indexer_t const& indexer, unsigned int neighExtent) const;
 
       /// Returns whether a point is isolated with respect to all the others
       template <typename PointIter>
-      bool isPointIsolatedFrom(
-        Point_t<PointIter> const& point,
-        typename Partition_t<PointIter>::Cell_t const& otherPoints
-        ) const;
+      bool isPointIsolatedFrom(Point_t<PointIter> const& point,
+                               typename Partition_t<PointIter>::Cell_t const& otherPoints) const;
 
       /// Returns whether a point is isolated in the specified neighbourhood
       template <typename PointIter>
-      bool isPointIsolatedWithinNeighborhood(
-        Partition_t<PointIter> const& partition,
-        Indexer_t::CellIndex_t cellIndex,
-        Point_t<PointIter> const& point,
-        NeighAddresses_t const& neighList
-        ) const;
+      bool isPointIsolatedWithinNeighborhood(Partition_t<PointIter> const& partition,
+                                             Indexer_t::CellIndex_t cellIndex,
+                                             Point_t<PointIter> const& point,
+                                             NeighAddresses_t const& neighList) const;
 
       /// Returns whether A and B are close enough to be considered non-isolated
       template <typename Point>
       bool closeEnough(Point const& A, Point const& B) const;
-
 
       /// Helper function. Returns a string `"(<from> to <to>)"`
       static std::string rangeString(Coord_t from, Coord_t to);
 
       /// Helper function. Returns a string `"(<from> to <to>)"`
       static std::string rangeString(Range_t range)
-        { return rangeString(range.lower, range.upper); }
+      {
+        return rangeString(range.lower, range.upper);
+      }
 
     }; // class PointIsolationAlg
-
 
     //--------------------------------------------------------------------------
     /// @}
@@ -300,15 +279,14 @@ namespace lar {
   } // namespace example
 } // namespace lar
 
-
-
 //------------------------------------------------------------------------------
 //--- template implementation
 //------------------------------------------------------------------------------
 template <typename Coord>
 template <typename PointIter>
-std::vector<size_t> lar::example::PointIsolationAlg<Coord>::removeIsolatedPoints
-  (PointIter begin, PointIter end) const
+std::vector<size_t> lar::example::PointIsolationAlg<Coord>::removeIsolatedPoints(
+  PointIter begin,
+  PointIter end) const
 {
 
   std::vector<size_t> nonIsolated;
@@ -327,14 +305,10 @@ std::vector<size_t> lar::example::PointIsolationAlg<Coord>::removeIsolatedPoints
   Coord_t cellSize = computeCellSize<PointIter>();
   assert(cellSize > 0);
   Partition_t<PointIter> partition(
-    { config.rangeX, cellSize },
-    { config.rangeY, cellSize },
-    { config.rangeZ, cellSize }
-    );
+    {config.rangeX, cellSize}, {config.rangeY, cellSize}, {config.rangeZ, cellSize});
 
   // if a cell is contained in a sphere with
-  bool const cellContainedInIsolationSphere
-    = (cellSize <= maximumOptimalCellSize(R));
+  bool const cellContainedInIsolationSphere = (cellSize <= maximumOptimalCellSize(R));
 
   //
   // determine neighbourhood
@@ -343,15 +317,13 @@ std::vector<size_t> lar::example::PointIsolationAlg<Coord>::removeIsolatedPoints
   // it's expressed as a list of coordinate shifts from a base cell to all the
   // others in the neighbourhood; it is contained in a cube
   //
-  unsigned int const neighExtent = (int) std::ceil(R / cellSize);
-  NeighAddresses_t neighList
-    = buildNeighborhood(partition.indexManager(), neighExtent);
+  unsigned int const neighExtent = (int)std::ceil(R / cellSize);
+  NeighAddresses_t neighList = buildNeighborhood(partition.indexManager(), neighExtent);
 
   // if a cell is not fully contained in a isolation radius, we need to check
   // the points of the cell with each other: their cell becomes part of the
   // neighbourhood
-  if (!cellContainedInIsolationSphere)
-    neighList.insert(neighList.begin(), { 0, 0, 0 });
+  if (!cellContainedInIsolationSphere) neighList.insert(neighList.begin(), {0, 0, 0});
 
   //
   // populate the partition
@@ -370,7 +342,7 @@ std::vector<size_t> lar::example::PointIsolationAlg<Coord>::removeIsolatedPoints
     // true only if the cell is completely contained within a R rßadius
     //
     if (cellContainedInIsolationSphere && (cellPoints.size() > 1)) {
-      for (auto const& pointPtr: cellPoints)
+      for (auto const& pointPtr : cellPoints)
         nonIsolated.push_back(std::distance(begin, pointPtr));
       continue;
     } // if all non-isolated
@@ -379,7 +351,7 @@ std::vector<size_t> lar::example::PointIsolationAlg<Coord>::removeIsolatedPoints
     // brute force approach: try all the points in this cell against all the
     // points in the neighbourhood
     //
-    for (auto const pointPtr: cellPoints) {
+    for (auto const pointPtr : cellPoints) {
       //
       // optimisation (speed): mark the points from other cells as non-isolated
       // when they trigger non-isolation in points of the current one
@@ -387,10 +359,7 @@ std::vector<size_t> lar::example::PointIsolationAlg<Coord>::removeIsolatedPoints
 
       // TODO
 
-      if (!isPointIsolatedWithinNeighborhood
-        (partition, cellIndex, *pointPtr, neighList)
-        )
-      {
+      if (!isPointIsolatedWithinNeighborhood(partition, cellIndex, *pointPtr, neighList)) {
         nonIsolated.push_back(std::distance(begin, pointPtr));
       }
     } // for points in cell
@@ -400,43 +369,34 @@ std::vector<size_t> lar::example::PointIsolationAlg<Coord>::removeIsolatedPoints
   return nonIsolated;
 } // lar::example::PointIsolationAlg::removeIsolatedPoints()
 
-
 //--------------------------------------------------------------------------
 template <typename Coord>
-void lar::example::PointIsolationAlg<Coord>::validateConfiguration
-  (Configuration_t const& config)
+void lar::example::PointIsolationAlg<Coord>::validateConfiguration(Configuration_t const& config)
 {
   std::vector<std::string> errors;
   if (config.radius2 < Coord_t(0)) {
-    errors.push_back
-      ("invalid radius squared (" + std::to_string(config.radius2) + ")");
+    errors.push_back("invalid radius squared (" + std::to_string(config.radius2) + ")");
   }
-  if (!config.rangeX.valid()) {
-    errors.push_back("invalid x range " + rangeString(config.rangeX));
-  }
-  if (!config.rangeY.valid()) {
-    errors.push_back("invalid y range " + rangeString(config.rangeY));
-  }
-  if (!config.rangeZ.valid()) {
-    errors.push_back("invalid z range " + rangeString(config.rangeZ));
-  }
+  if (!config.rangeX.valid()) { errors.push_back("invalid x range " + rangeString(config.rangeX)); }
+  if (!config.rangeY.valid()) { errors.push_back("invalid y range " + rangeString(config.rangeY)); }
+  if (!config.rangeZ.valid()) { errors.push_back("invalid z range " + rangeString(config.rangeZ)); }
 
   if (errors.empty()) return;
 
   // compose the full error message as concatenation:
-  std::string message
-    (std::to_string(errors.size()) + " configuration errors found:");
+  std::string message(std::to_string(errors.size()) + " configuration errors found:");
 
-  for (auto const& error: errors) message += "\n * " + error;
+  for (auto const& error : errors)
+    message += "\n * " + error;
   throw std::runtime_error(message);
 
 } // lar::example::PointIsolationAlg::validateConfiguration()
 
-
 //--------------------------------------------------------------------------
 template <typename Coord>
 template <typename PointIter /* = std::array<double, 3> const* */>
-Coord lar::example::PointIsolationAlg<Coord>::computeCellSize() const {
+Coord lar::example::PointIsolationAlg<Coord>::computeCellSize() const
+{
 
   Coord_t const R = std::sqrt(config.radius2);
 
@@ -454,18 +414,16 @@ Coord lar::example::PointIsolationAlg<Coord>::computeCellSize() const {
   if (config.maxMemory == 0) return cellSize;
 
   do {
-    std::array<size_t, 3> partition = details::diceVolume(
-      CoordRangeCells<Coord_t>{ config.rangeX, cellSize },
-      CoordRangeCells<Coord_t>{ config.rangeY, cellSize },
-      CoordRangeCells<Coord_t>{ config.rangeZ, cellSize }
-      );
+    std::array<size_t, 3> partition =
+      details::diceVolume(CoordRangeCells<Coord_t>{config.rangeX, cellSize},
+                          CoordRangeCells<Coord_t>{config.rangeY, cellSize},
+                          CoordRangeCells<Coord_t>{config.rangeZ, cellSize});
 
     size_t const nCells = partition[0] * partition[1] * partition[2];
     if (nCells <= 1) break; // we can't reduce it any further
 
     // is memory low enough?
-    size_t const memory
-      = nCells * sizeof(typename SpacePartition<PointIter>::Cell_t);
+    size_t const memory = nCells * sizeof(typename SpacePartition<PointIter>::Cell_t);
     if (memory < config.maxMemory) break;
 
     cellSize *= 2;
@@ -474,12 +432,11 @@ Coord lar::example::PointIsolationAlg<Coord>::computeCellSize() const {
   return cellSize;
 } // lar::example::PointIsolationAlg<Coord>::computeCellSize()
 
-
 //------------------------------------------------------------------------------
 template <typename Coord>
 typename lar::example::PointIsolationAlg<Coord>::NeighAddresses_t
-lar::example::PointIsolationAlg<Coord>::buildNeighborhood
-  (Indexer_t const& indexer, unsigned int neighExtent) const
+lar::example::PointIsolationAlg<Coord>::buildNeighborhood(Indexer_t const& indexer,
+                                                          unsigned int neighExtent) const
 {
   unsigned int const neighSize = 1 + 2 * neighExtent;
   NeighAddresses_t neighList;
@@ -497,7 +454,7 @@ lar::example::PointIsolationAlg<Coord>::buildNeighborhood
 
   CellDimIndex_t const ext = neighExtent; // convert into the right signedness
 
-  CellID_t center{{ 0, 0, 0 }}, cellID;
+  CellID_t center{{0, 0, 0}}, cellID;
   for (CellDimIndex_t ixOfs = -ext; ixOfs <= ext; ++ixOfs) {
     cellID[0] = ixOfs;
     for (CellDimIndex_t iyOfs = -ext; iyOfs <= ext; ++iyOfs) {
@@ -509,32 +466,28 @@ lar::example::PointIsolationAlg<Coord>::buildNeighborhood
         neighList.push_back(indexer.offset(center, cellID));
 
       } // for ixOfs
-    } // for iyOfs
-  } // for izOfs
+    }   // for iyOfs
+  }     // for izOfs
 
   return neighList;
 } // lar::example::PointIsolationAlg<Coord>::buildNeighborhood()
-
 
 //--------------------------------------------------------------------------
 template <typename Coord>
 template <typename PointIter>
 bool lar::example::PointIsolationAlg<Coord>::isPointIsolatedFrom(
   Point_t<PointIter> const& point,
-  typename Partition_t<PointIter>::Cell_t const& otherPoints
-) const
+  typename Partition_t<PointIter>::Cell_t const& otherPoints) const
 {
 
-  for (auto const& otherPointPtr: otherPoints) {
+  for (auto const& otherPointPtr : otherPoints) {
     // make sure that we did not compare the point with itself
-    if (closeEnough(point, *otherPointPtr) && (&point != &*otherPointPtr))
-      return false;
+    if (closeEnough(point, *otherPointPtr) && (&point != &*otherPointPtr)) return false;
   }
 
   return true;
 
 } // lar::example::PointIsolationAlg<Coord>::isPointIsolatedFrom()
-
 
 //--------------------------------------------------------------------------
 template <typename Coord>
@@ -543,12 +496,11 @@ bool lar::example::PointIsolationAlg<Coord>::isPointIsolatedWithinNeighborhood(
   Partition_t<PointIter> const& partition,
   Indexer_t::CellIndex_t cellIndex,
   Point_t<PointIter> const& point,
-  NeighAddresses_t const& neighList
-) const
+  NeighAddresses_t const& neighList) const
 {
 
   // check in all cells of the neighbourhood
-  for (Indexer_t::CellIndexOffset_t neighOfs: neighList) {
+  for (Indexer_t::CellIndexOffset_t neighOfs : neighList) {
 
     //
     // optimisation (speed): have neighbour offsets so that the invalid ones
@@ -566,13 +518,12 @@ bool lar::example::PointIsolationAlg<Coord>::isPointIsolatedWithinNeighborhood(
 
 } // lar::example::PointIsolationAlg<Coord>::isPointIsolatedWithinNeighborhood()
 
-
 //--------------------------------------------------------------------------
 template <typename Coord>
 template <typename PointIter>
-std::vector<size_t>
-lar::example::PointIsolationAlg<Coord>::bruteRemoveIsolatedPoints
-  (PointIter begin, PointIter end) const
+std::vector<size_t> lar::example::PointIsolationAlg<Coord>::bruteRemoveIsolatedPoints(
+  PointIter begin,
+  PointIter end) const
 {
   //
   // reference implementation: brute force dumb one
@@ -598,27 +549,23 @@ lar::example::PointIsolationAlg<Coord>::bruteRemoveIsolatedPoints
   return nonIsolated;
 } // lar::example::PointIsolationAlg::bruteRemoveIsolatedPoints()
 
-
 //--------------------------------------------------------------------------
 template <typename Coord>
 template <typename Point>
-bool lar::example::PointIsolationAlg<Coord>::closeEnough
-  (Point const& A, Point const& B) const
+bool lar::example::PointIsolationAlg<Coord>::closeEnough(Point const& A, Point const& B) const
 {
-  return cet::sum_of_squares(
-    details::extractPositionX(A) - details::extractPositionX(B),
-    details::extractPositionY(A) - details::extractPositionY(B),
-    details::extractPositionZ(A) - details::extractPositionZ(B)
-    ) <= config.radius2;
+  return cet::sum_of_squares(details::extractPositionX(A) - details::extractPositionX(B),
+                             details::extractPositionY(A) - details::extractPositionY(B),
+                             details::extractPositionZ(A) - details::extractPositionZ(B)) <=
+         config.radius2;
 } // lar::example::PointIsolationAlg<Point>::closeEnough()
-
 
 //--------------------------------------------------------------------------
 template <typename Coord>
-std::string lar::example::PointIsolationAlg<Coord>::rangeString
-  (Coord_t from, Coord_t to)
-  { return "(" + std::to_string(from) + " to " + std::to_string(to) + ")"; }
-
+std::string lar::example::PointIsolationAlg<Coord>::rangeString(Coord_t from, Coord_t to)
+{
+  return "(" + std::to_string(from) + " to " + std::to_string(to) + ")";
+}
 
 //--------------------------------------------------------------------------
 

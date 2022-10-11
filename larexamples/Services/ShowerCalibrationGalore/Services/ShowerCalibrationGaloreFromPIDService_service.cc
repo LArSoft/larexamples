@@ -10,10 +10,9 @@
  */
 
 /// LArSoft libraries
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 #include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreFromPID.h"
 #include "larexamples/Services/ShowerCalibrationGalore/Services/ShowerCalibrationGaloreService.h"
-#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
-
 
 namespace lar {
   namespace example {
@@ -48,23 +47,18 @@ namespace lar {
      *   load this implementation.
      *
      */
-    using ShowerCalibrationGaloreFromPIDService
-      = lar::ServiceProviderImplementationWrapper
-        <ShowerCalibrationGaloreFromPID, ShowerCalibrationGaloreService>;
+    using ShowerCalibrationGaloreFromPIDService =
+      lar::ServiceProviderImplementationWrapper<ShowerCalibrationGaloreFromPID,
+                                                ShowerCalibrationGaloreService>;
 
   } // namespace example
 } // namespace lar
 
-
-DECLARE_ART_SERVICE_INTERFACE_IMPL(
-  lar::example::ShowerCalibrationGaloreFromPIDService,
-  lar::example::ShowerCalibrationGaloreService,
-  LEGACY
-  )
+DECLARE_ART_SERVICE_INTERFACE_IMPL(lar::example::ShowerCalibrationGaloreFromPIDService,
+                                   lar::example::ShowerCalibrationGaloreService,
+                                   LEGACY)
 
 #include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 
-DEFINE_ART_SERVICE_INTERFACE_IMPL(
-  lar::example::ShowerCalibrationGaloreFromPIDService,
-  lar::example::ShowerCalibrationGaloreService
-  )
+DEFINE_ART_SERVICE_INTERFACE_IMPL(lar::example::ShowerCalibrationGaloreFromPIDService,
+                                  lar::example::ShowerCalibrationGaloreService)

@@ -35,13 +35,12 @@
 #include "larexamples/Algorithms/RemoveIsolatedSpacePoints/PointIsolationAlg.h"
 
 // C/C++ standard libraries
-#include <cmath> // std::pow(), std::ceil(), std::floor()
-#include <stdexcept> // std::logic_error
-#include <chrono>
-#include <sstream>
-#include <iostream>
 #include <array>
-
+#include <chrono>
+#include <cmath> // std::pow(), std::ceil(), std::floor()
+#include <iostream>
+#include <sstream>
+#include <stdexcept> // std::logic_error
 
 // BEGIN RemoveIsolatedSpacePoints group ---------------------------------------
 /// @ingroup RemoveIsolatedSpacePoints
@@ -49,10 +48,15 @@
 //------------------------------------------------------------------------------
 //--- Test code
 //---
-template <typename T> T cube(T side) { return side * side * side; }
+template <typename T>
+T cube(T side)
+{
+  return side * side * side;
+}
 
 template <typename Point>
-std::vector<Point> createPointsInCube(unsigned int pointsPerSide) {
+std::vector<Point> createPointsInCube(unsigned int pointsPerSide)
+{
 
   std::vector<Point> points;
   points.reserve(cube(pointsPerSide));
@@ -66,35 +70,29 @@ std::vector<Point> createPointsInCube(unsigned int pointsPerSide) {
         p[2] = k;
         points.push_back(p);
       } // for k
-    } // for j
-  } // for i
+    }   // for j
+  }     // for i
 
   return points;
 } // createPointsInCube()
 
-
 //------------------------------------------------------------------------------
 template <typename T>
-void PrintConfiguration(
-  typename lar::example::PointIsolationAlg<T>::Configuration_t const& config,
-  std::ostream& out = std::cout
-) {
+void PrintConfiguration(typename lar::example::PointIsolationAlg<T>::Configuration_t const& config,
+                        std::ostream& out = std::cout)
+{
   out << "PointIsolationAlg algorithm configuration:"
-    << "\n  radius: " << std::sqrt(config.radius2)
-    << "\n  bounding box:"
-    << "\n    x: " << config.rangeX.lower << " -- " << config.rangeX.upper
-    << "\n    y: " << config.rangeY.lower << " -- " << config.rangeY.upper
-    << "\n    z: " << config.rangeZ.lower << " -- " << config.rangeZ.upper
-    << std::endl;
+      << "\n  radius: " << std::sqrt(config.radius2) << "\n  bounding box:"
+      << "\n    x: " << config.rangeX.lower << " -- " << config.rangeX.upper
+      << "\n    y: " << config.rangeY.lower << " -- " << config.rangeY.upper
+      << "\n    z: " << config.rangeZ.lower << " -- " << config.rangeZ.upper << std::endl;
 } // PrintConfiguration()
 
-
 //------------------------------------------------------------------------------
 template <typename T>
-void StressTest(
-  unsigned int pointsPerSide,
-  typename lar::example::PointIsolationAlg<T>::Configuration_t const& config
-) {
+void StressTest(unsigned int pointsPerSide,
+                typename lar::example::PointIsolationAlg<T>::Configuration_t const& config)
+{
 
   using Coord_t = T;
   using PointIsolationAlg_t = lar::example::PointIsolationAlg<Coord_t>;
@@ -110,10 +108,10 @@ void StressTest(
   std::vector<Point_t> points = createPointsInCube<Point_t>(pointsPerSide);
 
   auto stop_init_time = std::chrono::high_resolution_clock::now();
-  auto elapsed_init = std::chrono::duration_cast<std::chrono::duration<float>>
-    (stop_init_time - start_init_time); // seconds
+  auto elapsed_init = std::chrono::duration_cast<std::chrono::duration<float>>(
+    stop_init_time - start_init_time); // seconds
 
-  unsigned int const expected = (config.radius2 >= 1.)? points.size(): 0;
+  unsigned int const expected = (config.radius2 >= 1.) ? points.size() : 0;
   std::cout << "Processing " << points.size() << " points." << std::endl;
 
   //
@@ -125,41 +123,36 @@ void StressTest(
   std::vector<size_t> result = algo.removeIsolatedPoints(points);
   auto stop_run_time = std::chrono::high_resolution_clock::now();
 
-  auto elapsed_run = std::chrono::duration_cast<std::chrono::duration<float>>
-    (stop_run_time - start_run_time); // seconds
+  auto elapsed_run = std::chrono::duration_cast<std::chrono::duration<float>>(
+    stop_run_time - start_run_time); // seconds
 
   //
   // report results on screen
   //
   PrintConfiguration<Coord_t>(config);
-  std::cout << "Found " << result.size() << "/" << points.size()
-    << " non-isolated points in " << (elapsed_run.count()*1000.) << " ms"
-    << " (" << (elapsed_init.count()*1000.) << " ms for initialization)"
-    << std::endl;
+  std::cout << "Found " << result.size() << "/" << points.size() << " non-isolated points in "
+            << (elapsed_run.count() * 1000.) << " ms"
+            << " (" << (elapsed_init.count() * 1000.) << " ms for initialization)" << std::endl;
 
   if (result.size() != expected) {
-    throw std::logic_error(
-      "Expected " + std::to_string(expected) + " non-isolated points, found "
-      + std::to_string(points.size()) + "."
-      );
+    throw std::logic_error("Expected " + std::to_string(expected) + " non-isolated points, found " +
+                           std::to_string(points.size()) + ".");
   }
 
 } // StressTest()
 
-
 //------------------------------------------------------------------------------
 //--- main()
 //---
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
   using Coord_t = double;
 
   //
   // argument parsing
   //
   if (argc != 3) {
-    std::cerr << "Usage:  " << argv[0]
-      << "  NumberOfPoints[+|-] IsolationRadius"
-      << std::endl;
+    std::cerr << "Usage:  " << argv[0] << "  NumberOfPoints[+|-] IsolationRadius" << std::endl;
     return 1;
   }
 
@@ -172,60 +165,58 @@ int main(int argc, char** argv) {
   sstr.str(argv[1]);
   sstr >> requestedPoints;
   if (!sstr) {
-    std::cerr << "Error: expected number of points as first argument, got '"
-      << argv[1] << "' instead." << std::endl;
+    std::cerr << "Error: expected number of points as first argument, got '" << argv[1]
+              << "' instead." << std::endl;
     return 1;
   }
   char c;
   sstr >> c;
-  if (sstr.eof()) roundMode = rmDefault;
+  if (sstr.eof())
+    roundMode = rmDefault;
   else {
     switch (c) {
-      case '+': roundMode = rmCeil; break;
-      case '-': roundMode = rmFloor; break;
-      default:
-        std::cerr << "Invalid round mode specification '" << c
-          << "' (must be '+', '-' or omitted)" << std::endl;
-        return 1;
+    case '+': roundMode = rmCeil; break;
+    case '-': roundMode = rmFloor; break;
+    default:
+      std::cerr << "Invalid round mode specification '" << c << "' (must be '+', '-' or omitted)"
+                << std::endl;
+      return 1;
     } // switch round mode spec
-  } // if has round mode spec
+  }   // if has round mode spec
 
   Coord_t radius;
   sstr.clear();
   sstr.str(argv[2]);
   sstr >> radius;
   if (!sstr) {
-    std::cerr << "Error: expected isolation radius as second argument, got '"
-      << argv[2] << "' instead." << std::endl;
+    std::cerr << "Error: expected isolation radius as second argument, got '" << argv[2]
+              << "' instead." << std::endl;
     return 1;
   }
-
 
   //
   // prepare the configuration
   //
 
   // decide on the points per side
-  double sideLength = std::pow(double(requestedPoints), 1./3.);
-  unsigned int pointsPerSide = (unsigned int) std::floor(sideLength);
+  double sideLength = std::pow(double(requestedPoints), 1. / 3.);
+  unsigned int pointsPerSide = (unsigned int)std::floor(sideLength);
   switch (roundMode) {
-    case rmFloor: break;
-    case rmCeil: pointsPerSide = (unsigned int) std::ceil(sideLength); break;
-    case rmNearest: {
-      unsigned int const nFloorPoints =  cube(pointsPerSide),
-        nCeilPoints = cube(pointsPerSide + 1);
-      if ((requestedPoints - nFloorPoints) >= (nCeilPoints - requestedPoints))
-        ++pointsPerSide;
-      break;
-    } // case rmNearest
-  } // switch roundMode
+  case rmFloor: break;
+  case rmCeil: pointsPerSide = (unsigned int)std::ceil(sideLength); break;
+  case rmNearest: {
+    unsigned int const nFloorPoints = cube(pointsPerSide), nCeilPoints = cube(pointsPerSide + 1);
+    if ((requestedPoints - nFloorPoints) >= (nCeilPoints - requestedPoints)) ++pointsPerSide;
+    break;
+  }                                         // case rmNearest
+  }                                         // switch roundMode
   if (pointsPerSide < 1) pointsPerSide = 1; // sanity check
 
   // enclosing volume has a 0.5 margin
   constexpr Coord_t margin = 0.5;
   lar::example::PointIsolationAlg<Coord_t>::Configuration_t config;
   config.radius2 = cet::square(radius);
-  config.rangeX = { -margin, pointsPerSide - 1.0 + margin };
+  config.rangeX = {-margin, pointsPerSide - 1.0 + margin};
   config.rangeY = config.rangeX;
   config.rangeZ = config.rangeX;
 
@@ -242,4 +233,3 @@ int main(int argc, char** argv) {
 
 /// @}
 // END RemoveIsolatedSpacePoints group -----------------------------------------
-

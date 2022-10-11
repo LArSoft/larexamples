@@ -20,25 +20,21 @@
 // C/C++ standard libraries
 #include <utility> // std::move()
 
-
 //------------------------------------------------------------------------------
 //--- lar::example::TotallyCheatTrackingAlg implementation
 //------------------------------------------------------------------------------
-lar::example::CheatTrack lar::example::TotallyCheatTrackingAlg::makeTrack
-  (simb::MCParticle const& mcParticle) const
+lar::example::CheatTrack lar::example::TotallyCheatTrackingAlg::makeTrack(
+  simb::MCParticle const& mcParticle) const
 {
   recob::Trajectory::Positions_t pos;
   recob::Trajectory::Momenta_t mom;
 
-  for (auto const& pair: mcParticle.Trajectory()) {
-    pos.push_back
-      (geo::vect::rounded01(geo::vect::toPoint(pair.first.Vect()), 1e-8));
-    mom.push_back
-      (geo::vect::rounded01(geo::vect::toVector(pair.second.Vect()), 1e-8));
+  for (auto const& pair : mcParticle.Trajectory()) {
+    pos.push_back(geo::vect::rounded01(geo::vect::toPoint(pair.first.Vect()), 1e-8));
+    mom.push_back(geo::vect::rounded01(geo::vect::toVector(pair.second.Vect()), 1e-8));
   } // for
 
-  return { { std::move(pos), std::move(mom), true }, mcParticle.PdgCode() };
+  return {{std::move(pos), std::move(mom), true}, mcParticle.PdgCode()};
 } // lar::example::TotallyCheatTrackingAlg::makeTrack()
-
 
 //------------------------------------------------------------------------------

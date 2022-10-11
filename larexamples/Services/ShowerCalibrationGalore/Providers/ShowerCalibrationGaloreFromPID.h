@@ -9,10 +9,8 @@
  *
  */
 
-
 #ifndef LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALOREFROMPID_H
 #define LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALOREFROMPID_H
-
 
 // LArSoft libraries
 #include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGalore.h"
@@ -30,40 +28,35 @@
 #include "TObject.h"
 
 // C/C++ standard libraries
-#include <string>
-#include <vector>
-#include <memory> // std::unique_ptr()
-#include <type_traits> // std::is_base_of<>
 #include <initializer_list>
-
+#include <memory> // std::unique_ptr()
+#include <string>
+#include <type_traits> // std::is_base_of<>
+#include <vector>
 
 // forward declarations
 class TGraph; // from ROOT
 
-
 namespace lar {
-   namespace example {
+  namespace example {
 
-      // BEGIN ShowerCalibrationGalore -----------------------------------------
-      /// @ingroup ShowerCalibrationGalore
-      /// @{
+    // BEGIN ShowerCalibrationGalore -----------------------------------------
+    /// @ingroup ShowerCalibrationGalore
+    /// @{
 
-      namespace details {
+    namespace details {
 
-         /// Reads an object from a ROOT directory, checking its type
-         /// @throw cet::exception if no object or wrong type
-         template <typename ROOTobj>
-         std::unique_ptr<ROOTobj> readROOTobject
-            (TDirectory* sourceDir, std::string name);
+      /// Reads an object from a ROOT directory, checking its type
+      /// @throw cet::exception if no object or wrong type
+      template <typename ROOTobj>
+      std::unique_ptr<ROOTobj> readROOTobject(TDirectory* sourceDir, std::string name);
 
-      } // namespace details
+    } // namespace details
 
+    /// Splits path into ROOT file name and directory path
+    std::pair<std::string, std::string> splitROOTpath(std::string path);
 
-      /// Splits path into ROOT file name and directory path
-      std::pair<std::string, std::string> splitROOTpath(std::string path);
-
-
-      /**
+    /**
        * @brief Shower calibration service provider correcting according to PID.
        *
        * The service provider computes a calibration factor for a reconstructed
@@ -118,47 +111,43 @@ namespace lar {
        *   path in `FW_SEARCH_PATH`
        *
        */
-      class ShowerCalibrationGaloreFromPID: public ShowerCalibrationGalore {
-            public:
+    class ShowerCalibrationGaloreFromPID : public ShowerCalibrationGalore {
+    public:
+      //---------------------------------------------------------------------
+      /// Collection of configuration parameters for the service
+      struct Config {
+        using Name = fhicl::Name;
+        using Comment = fhicl::Comment;
 
-         //---------------------------------------------------------------------
-         /// Collection of configuration parameters for the service
-         struct Config {
-            using Name = fhicl::Name;
-            using Comment = fhicl::Comment;
+        fhicl::Atom<std::string> CalibrationFile{
+          Name("CalibrationFile"),
+          Comment("path to calibration file and ROOT directory"
+                  " (e.g. path/to/file.root:Dir/Dir)")};
 
-            fhicl::Atom<std::string> CalibrationFile {
-               Name("CalibrationFile"),
-               Comment(
-                 "path to calibration file and ROOT directory"
-                 " (e.g. path/to/file.root:Dir/Dir)"
-                 )
-            };
+      }; // struct Config
 
-         }; // struct Config
+      /// Type describing all the parameters
+      using parameters_type = fhicl::Table<Config>;
 
-         /// Type describing all the parameters
-         using parameters_type = fhicl::Table<Config>;
+      //---------------------------------------------------------------------
+      /// Constructor from the complete configuration object
+      ShowerCalibrationGaloreFromPID(Config const& config)
+      {
+        readCalibration(config.CalibrationFile());
+      }
 
+      //---------------------------------------------------------------------
+      /// Constructor from a parameter set
+      ShowerCalibrationGaloreFromPID(fhicl::ParameterSet const& pset)
+        : ShowerCalibrationGaloreFromPID(
+            parameters_type(pset, {"service_type", "service_provider"})())
+      {}
 
-         //---------------------------------------------------------------------
-         /// Constructor from the complete configuration object
-         ShowerCalibrationGaloreFromPID(Config const& config)
-           { readCalibration(config.CalibrationFile()); }
+      /// @{
+      /// @name Correction query
 
-         //---------------------------------------------------------------------
-         /// Constructor from a parameter set
-         ShowerCalibrationGaloreFromPID(fhicl::ParameterSet const& pset)
-           : ShowerCalibrationGaloreFromPID
-             (parameters_type(pset, { "service_type", "service_provider" })())
-           {}
-
-
-         /// @{
-         /// @name Correction query
-
-         //---------------------------------------------------------------------
-         /**
+      //---------------------------------------------------------------------
+      /**
           * @brief Returns a correction factor for a given reconstructed shower
           * @return the uniform energy correction factor
           * @see correction()
@@ -167,10 +156,9 @@ namespace lar {
           * the shower energy to calibrate it, but no uncertainty.
           *
           */
-         virtual float correctionFactor
-           (recob::Shower const&, PDGID_t = unknownID) const override;
+      virtual float correctionFactor(recob::Shower const&, PDGID_t = unknownID) const override;
 
-         /**
+      /**
           * @brief Returns the correction for a given reconstructed shower
           * @return the correction with its uncertainty
           * @see correctionFactor()
@@ -179,140 +167,129 @@ namespace lar {
           * any shower energy to calibrate it, with its global uncertainty.
           *
           */
-         virtual Correction_t correction
-           (recob::Shower const&, PDGID_t = unknownID) const override;
-
-         /// @}
-
-         /// Returns a string with a short report of the current corrections
-         virtual std::string report() const override
-           { std::ostringstream sstr; reportTo(sstr); return sstr.str(); }
-
-
-         /// Reads the calibration information from the specified file
-         void readCalibration(std::string path);
-
-
-         /// Prints a short report of the current corrections
-         template <typename Stream>
-         void reportTo(Stream&& out) const;
-
-
-         /// Verifies that points in specified graph have increasing abscissa
-         /// @throw cet::exception if points are not sorted by growing x
-         static void verifyOrder(TGraph const* graph);
-
-
-         //---------------------------------------------------------------------
-            private:
-         /// Internal structure containing the calibration information
-         struct CalibrationInfo_t {
-            std::vector<PDGID_t> appliesTo; ///< PID it applies to; unused
-            double minE = -1.; ///< lower end of the energy range covered [GeV]
-            double maxE = -1.; ///< upper end of the energy range covered [GeV]
-
-            /// parametrisation of the correction factor
-            std::unique_ptr<ROOT::Math::Interpolator> factor;
-
-            /// parametrisation of the correction uncertainty
-            std::unique_ptr<ROOT::Math::Interpolator> error;
-
-            double evalFactor(double E) const;
-            double evalError(double E) const;
-
-            bool present() const { return maxE >= 0.; }
-            bool uniform() const { return minE == maxE; }
-
-            CalibrationInfo_t& applyTo(PDGID_t id);
-            CalibrationInfo_t& applyTo(std::initializer_list<PDGID_t> ids);
-
-            /// Prints a short report of this correction
-            template <typename Stream>
-            void reportTo(Stream&& out) const;
-         }; // CalibrationInfo_t
-
-
-         CalibrationInfo_t Calibration_pi0; ///< neutral pion calibration
-         CalibrationInfo_t Calibration_photon; ///< photon calibration
-         CalibrationInfo_t Calibration_electron; ///< electron/positron calibration
-         CalibrationInfo_t Calibration_muon; ///< muon/antimuon calibration
-         CalibrationInfo_t Calibration_other; ///< default calibration
-
-
-         /// Returns the correct CalibrationInfo_t for specified id
-         CalibrationInfo_t const& selectCorrection(PDGID_t id) const;
-
-         /// Reads and returns calibration information from the specified graph
-         CalibrationInfo_t readParticleCalibration
-           (TDirectory* SourceDir, std::string GraphName) const;
-
-         /// Reads and returns calibration information from the specified graph
-         /// and register a particle ID in it
-         CalibrationInfo_t readParticleCalibration
-           (TDirectory* SourceDir, std::string GraphName, PDGID_t id) const;
-
-         /// Reads and returns calibration information from the specified graph
-         /// and register a list of particle IDs to it
-         CalibrationInfo_t readParticleCalibration(
-            TDirectory* SourceDir, std::string GraphName,
-            std::initializer_list<PDGID_t> ids
-            ) const;
-
-         /// Opens the specified ROOT directory, as in path/to/file.root:dir/dir
-         static TDirectory* OpenROOTdirectory(std::string path);
-
-         /// Creates a ROOT interpolator from a set of N points
-         static std::unique_ptr<ROOT::Math::Interpolator>
-         createInterpolator(unsigned int N, double const* x, double const* y);
-
-      }; // class ShowerCalibrationGaloreFromPID
+      virtual Correction_t correction(recob::Shower const&, PDGID_t = unknownID) const override;
 
       /// @}
-      // END ShowerCalibrationGalore -----------------------------------------------
 
+      /// Returns a string with a short report of the current corrections
+      virtual std::string report() const override
+      {
+        std::ostringstream sstr;
+        reportTo(sstr);
+        return sstr.str();
+      }
 
-   } // namespace example
+      /// Reads the calibration information from the specified file
+      void readCalibration(std::string path);
+
+      /// Prints a short report of the current corrections
+      template <typename Stream>
+      void reportTo(Stream&& out) const;
+
+      /// Verifies that points in specified graph have increasing abscissa
+      /// @throw cet::exception if points are not sorted by growing x
+      static void verifyOrder(TGraph const* graph);
+
+      //---------------------------------------------------------------------
+    private:
+      /// Internal structure containing the calibration information
+      struct CalibrationInfo_t {
+        std::vector<PDGID_t> appliesTo; ///< PID it applies to; unused
+        double minE = -1.;              ///< lower end of the energy range covered [GeV]
+        double maxE = -1.;              ///< upper end of the energy range covered [GeV]
+
+        /// parametrisation of the correction factor
+        std::unique_ptr<ROOT::Math::Interpolator> factor;
+
+        /// parametrisation of the correction uncertainty
+        std::unique_ptr<ROOT::Math::Interpolator> error;
+
+        double evalFactor(double E) const;
+        double evalError(double E) const;
+
+        bool present() const { return maxE >= 0.; }
+        bool uniform() const { return minE == maxE; }
+
+        CalibrationInfo_t& applyTo(PDGID_t id);
+        CalibrationInfo_t& applyTo(std::initializer_list<PDGID_t> ids);
+
+        /// Prints a short report of this correction
+        template <typename Stream>
+        void reportTo(Stream&& out) const;
+      }; // CalibrationInfo_t
+
+      CalibrationInfo_t Calibration_pi0;      ///< neutral pion calibration
+      CalibrationInfo_t Calibration_photon;   ///< photon calibration
+      CalibrationInfo_t Calibration_electron; ///< electron/positron calibration
+      CalibrationInfo_t Calibration_muon;     ///< muon/antimuon calibration
+      CalibrationInfo_t Calibration_other;    ///< default calibration
+
+      /// Returns the correct CalibrationInfo_t for specified id
+      CalibrationInfo_t const& selectCorrection(PDGID_t id) const;
+
+      /// Reads and returns calibration information from the specified graph
+      CalibrationInfo_t readParticleCalibration(TDirectory* SourceDir, std::string GraphName) const;
+
+      /// Reads and returns calibration information from the specified graph
+      /// and register a particle ID in it
+      CalibrationInfo_t readParticleCalibration(TDirectory* SourceDir,
+                                                std::string GraphName,
+                                                PDGID_t id) const;
+
+      /// Reads and returns calibration information from the specified graph
+      /// and register a list of particle IDs to it
+      CalibrationInfo_t readParticleCalibration(TDirectory* SourceDir,
+                                                std::string GraphName,
+                                                std::initializer_list<PDGID_t> ids) const;
+
+      /// Opens the specified ROOT directory, as in path/to/file.root:dir/dir
+      static TDirectory* OpenROOTdirectory(std::string path);
+
+      /// Creates a ROOT interpolator from a set of N points
+      static std::unique_ptr<ROOT::Math::Interpolator> createInterpolator(unsigned int N,
+                                                                          double const* x,
+                                                                          double const* y);
+
+    }; // class ShowerCalibrationGaloreFromPID
+
+    /// @}
+    // END ShowerCalibrationGalore -----------------------------------------------
+
+  } // namespace example
 } // namespace lar
-
-
 
 //------------------------------------------------------------------------------
 //--- template implementation
 //---
 template <typename ROOTobj>
-std::unique_ptr<ROOTobj> lar::example::details::readROOTobject
-   (TDirectory* sourceDir, std::string name)
+std::unique_ptr<ROOTobj> lar::example::details::readROOTobject(TDirectory* sourceDir,
+                                                               std::string name)
 {
-   if (!sourceDir) {
-      throw cet::exception("readROOTobject")
-        << "Invalid source ROOT directory\n";
-   }
+  if (!sourceDir) { throw cet::exception("readROOTobject") << "Invalid source ROOT directory\n"; }
 
-   // read the object and immediately claim its ownership
-   TObject* pObj = sourceDir->Get(name.c_str());
-   if (!pObj) {
-      throw cet::exception("readROOTobject")
-        << "No object '" << name << "' in ROOT directory '"
-        << sourceDir->GetPath() << "'\n";
-   }
+  // read the object and immediately claim its ownership
+  TObject* pObj = sourceDir->Get(name.c_str());
+  if (!pObj) {
+    throw cet::exception("readROOTobject")
+      << "No object '" << name << "' in ROOT directory '" << sourceDir->GetPath() << "'\n";
+  }
 
-   if (std::is_base_of<TH1, std::decay_t<ROOTobj>>::value)
-      static_cast<TH1*>(pObj)->SetDirectory(nullptr);
-//   if (std::is_base_of<TTree, std::decay_t<ROOTobj>>::value)
-//      static_cast<TTree*>(pObj)->SetDirectory(nullptr);
-   std::unique_ptr<TObject> obj(pObj);
+  if (std::is_base_of<TH1, std::decay_t<ROOTobj>>::value)
+    static_cast<TH1*>(pObj)->SetDirectory(nullptr);
+  //   if (std::is_base_of<TTree, std::decay_t<ROOTobj>>::value)
+  //      static_cast<TTree*>(pObj)->SetDirectory(nullptr);
+  std::unique_ptr<TObject> obj(pObj);
 
-   // use ROOT to investigate whether this is the right type
-   if (!obj->InheritsFrom(ROOTobj::Class())) {
-      throw cet::exception("readROOTobject")
-        << "Object '" << name << "' in ROOT directory '"
-        << sourceDir->GetPath() << "' is a " << obj->IsA()->GetName()
-        << ", not derived from " << ROOTobj::Class()->GetName() << "\n";
-   }
+  // use ROOT to investigate whether this is the right type
+  if (!obj->InheritsFrom(ROOTobj::Class())) {
+    throw cet::exception("readROOTobject")
+      << "Object '" << name << "' in ROOT directory '" << sourceDir->GetPath() << "' is a "
+      << obj->IsA()->GetName() << ", not derived from " << ROOTobj::Class()->GetName() << "\n";
+  }
 
-   // now that we are sure obj is of the right type, we transfer ownership
-   // from obj to the return value (that here is implicitly constructed)
-   return std::unique_ptr<ROOTobj>(static_cast<ROOTobj*>(obj.release()));
+  // now that we are sure obj is of the right type, we transfer ownership
+  // from obj to the return value (that here is implicitly constructed)
+  return std::unique_ptr<ROOTobj>(static_cast<ROOTobj*>(obj.release()));
 } // lar::example::details::readROOTobject()
 
 //------------------------------------------------------------------------------
@@ -321,52 +298,46 @@ std::unique_ptr<ROOTobj> lar::example::details::readROOTobject
 template <typename Stream>
 void lar::example::ShowerCalibrationGaloreFromPID::reportTo(Stream&& out) const
 {
-   out << "Corrections for:";
-   out << "\n  - neutral pion:      ";
-   Calibration_pi0.reportTo(std::forward<Stream>(out));
-   out << "\n  - photon:            ";
-   Calibration_photon.reportTo(std::forward<Stream>(out));
-   out << "\n  - electron/positron: ";
-   Calibration_electron.reportTo(std::forward<Stream>(out));
-   out << "\n  - muon/antimuon:     ";
-   Calibration_muon.reportTo(std::forward<Stream>(out));
-   out << "\n  - other (default):   ";
-   Calibration_other.reportTo(std::forward<Stream>(out));
-   out << "\n";
+  out << "Corrections for:";
+  out << "\n  - neutral pion:      ";
+  Calibration_pi0.reportTo(std::forward<Stream>(out));
+  out << "\n  - photon:            ";
+  Calibration_photon.reportTo(std::forward<Stream>(out));
+  out << "\n  - electron/positron: ";
+  Calibration_electron.reportTo(std::forward<Stream>(out));
+  out << "\n  - muon/antimuon:     ";
+  Calibration_muon.reportTo(std::forward<Stream>(out));
+  out << "\n  - other (default):   ";
+  Calibration_other.reportTo(std::forward<Stream>(out));
+  out << "\n";
 } // lar::example::ShowerCalibrationGaloreFromPID::report()
-
 
 //------------------------------------------------------------------------------
 template <typename Stream>
-void lar::example::ShowerCalibrationGaloreFromPID::CalibrationInfo_t::reportTo
-   (Stream&& out) const
+void lar::example::ShowerCalibrationGaloreFromPID::CalibrationInfo_t::reportTo(Stream&& out) const
 {
-   if (!present()) {
-      out << "not present";
-      return;
-   }
-   if (uniform()) {
-      out << "uniform correction " << factor->Eval(minE) << " +/- "
-         << error->Eval(minE) << " for all energies";
-   }
-   else {
-      out << "correction valid from E=" << minE
-         << " GeV (" << factor->Eval(minE) << " +/- " << error->Eval(minE)
-         << ") to E=" << maxE
-         << " GeV (" << factor->Eval(maxE) << " +/- " << error->Eval(maxE)
-         << ")";
-   }
-   if (!appliesTo.empty()) {
-      out << "; covers particles ID={";
-      for (auto id: appliesTo) out << " " << id;
-      out << " }";
-   }
+  if (!present()) {
+    out << "not present";
+    return;
+  }
+  if (uniform()) {
+    out << "uniform correction " << factor->Eval(minE) << " +/- " << error->Eval(minE)
+        << " for all energies";
+  }
+  else {
+    out << "correction valid from E=" << minE << " GeV (" << factor->Eval(minE) << " +/- "
+        << error->Eval(minE) << ") to E=" << maxE << " GeV (" << factor->Eval(maxE) << " +/- "
+        << error->Eval(maxE) << ")";
+  }
+  if (!appliesTo.empty()) {
+    out << "; covers particles ID={";
+    for (auto id : appliesTo)
+      out << " " << id;
+    out << " }";
+  }
 
 } // lar::example::ShowerCalibrationGaloreFromPID::CalibrationInfo_t::report()
 
-
 //------------------------------------------------------------------------------
 
-
 #endif // LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALOREFROMPID_H
-

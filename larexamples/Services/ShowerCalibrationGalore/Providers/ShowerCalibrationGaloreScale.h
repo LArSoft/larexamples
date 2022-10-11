@@ -9,10 +9,8 @@
  *
  */
 
-
 #ifndef LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALORESCALE_H
 #define LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALORESCALE_H
-
 
 // LArSoft libraries
 #include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGalore.h"
@@ -28,11 +26,10 @@
 #include <sstream>
 #include <string>
 
-
 namespace lar {
-   namespace example {
+  namespace example {
 
-      /**
+    /**
        * @brief A shower calibration service provider applying a uniform scale.
        * @ingroup ShowerCalibrationGalore
        * @see @ref ShowerCalibrationGalore "ShowerCalibrationGalore example overview"
@@ -49,50 +46,40 @@ namespace lar {
        *   factor
        *
        */
-      class ShowerCalibrationGaloreScale: public ShowerCalibrationGalore {
-            public:
+    class ShowerCalibrationGaloreScale : public ShowerCalibrationGalore {
+    public:
+      //---------------------------------------------------------------------
+      /// Collection of configuration parameters for the service
+      struct Config {
+        using Name = fhicl::Name;
+        using Comment = fhicl::Comment;
 
-         //---------------------------------------------------------------------
-         /// Collection of configuration parameters for the service
-         struct Config {
-            using Name = fhicl::Name;
-            using Comment = fhicl::Comment;
+        fhicl::Atom<float> factor{Name("factor"),
+                                  Comment("correction factor to be applied to all particles")};
 
-            fhicl::Atom<float> factor {
-               Name("factor"),
-               Comment("correction factor to be applied to all particles")
-            };
+        fhicl::Atom<float> error{Name("error"), Comment("uncertainty on the correction factor")};
 
-            fhicl::Atom<float> error {
-               Name("error"),
-               Comment("uncertainty on the correction factor")
-            };
+      }; // struct Config
 
-         }; // struct Config
+      /// Type describing all the parameters
+      using parameters_type = fhicl::Table<Config>;
 
-         /// Type describing all the parameters
-         using parameters_type = fhicl::Table<Config>;
+      //---------------------------------------------------------------------
+      /// Constructor from the complete configuration object
+      ShowerCalibrationGaloreScale(Config const& config) : corr(config.factor(), config.error()) {}
 
+      //---------------------------------------------------------------------
+      /// Constructor from a parameter set
+      ShowerCalibrationGaloreScale(fhicl::ParameterSet const& pset)
+        : ShowerCalibrationGaloreScale(
+            parameters_type(pset, {"service_type", "service_provider"})())
+      {}
 
-         //---------------------------------------------------------------------
-         /// Constructor from the complete configuration object
-         ShowerCalibrationGaloreScale(Config const& config)
-           : corr(config.factor(), config.error())
-           {}
+      /// @{
+      /// @name Correction query
 
-         //---------------------------------------------------------------------
-         /// Constructor from a parameter set
-         ShowerCalibrationGaloreScale(fhicl::ParameterSet const& pset)
-           : ShowerCalibrationGaloreScale
-             (parameters_type(pset, { "service_type", "service_provider" })())
-           {}
-
-
-         /// @{
-         /// @name Correction query
-
-         //---------------------------------------------------------------------
-         /**
+      //---------------------------------------------------------------------
+      /**
           * @brief Returns a correction factor for a given reconstructed shower
           * @return the uniform energy correction factor
           * @see correction()
@@ -101,11 +88,12 @@ namespace lar {
           * the shower energy to calibrate it, but no uncertainty.
           *
           */
-         virtual float correctionFactor
-           (recob::Shower const&, PDGID_t = unknownID) const override
-           { return corr.factor; }
+      virtual float correctionFactor(recob::Shower const&, PDGID_t = unknownID) const override
+      {
+        return corr.factor;
+      }
 
-         /**
+      /**
           * @brief Returns the correction for a given reconstructed shower
           * @return the correction with its uncertainty
           * @see correctionFactor()
@@ -114,32 +102,28 @@ namespace lar {
           * any shower energy to calibrate it, with its global uncertainty.
           *
           */
-         virtual Correction_t correction
-           (recob::Shower const&, PDGID_t = unknownID) const override
-           { return corr; }
+      virtual Correction_t correction(recob::Shower const&, PDGID_t = unknownID) const override
+      {
+        return corr;
+      }
 
-         /// @}
+      /// @}
 
+      /// Returns a string with a short report of the current correctionß
+      virtual std::string report() const override
+      {
+        std::ostringstream sstr;
+        sstr << "Uniform correction: " << corr;
+        return sstr.str();
+      }
 
-         /// Returns a string with a short report of the current correctionß
-         virtual std::string report() const override
-           {
-              std::ostringstream sstr;
-              sstr << "Uniform correction: " << corr;
-              return sstr.str();
-           }
+      //---------------------------------------------------------------------
+    private:
+      Correction_t corr;
 
+    }; // class ShowerCalibrationGaloreScale
 
-         //---------------------------------------------------------------------
-            private:
-         Correction_t corr;
-
-      }; // class ShowerCalibrationGaloreScale
-
-
-   } // namespace example
+  } // namespace example
 } // namespace lar
 
-
 #endif // LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALORESCALE_H
-

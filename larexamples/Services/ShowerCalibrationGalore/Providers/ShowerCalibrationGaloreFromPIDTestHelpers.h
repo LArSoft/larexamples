@@ -10,17 +10,15 @@
  *
  */
 
-
 #ifndef LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALOREFROMPIDTESTHELPERS_H
 #define LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALOREFROMPIDTESTHELPERS_H
 
 /// LArSoft libraries
-#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreFromPID.h"
 #include "larcorealg/TestUtils/ProviderTestHelpers.h"
+#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreFromPID.h"
 
 // C/C++ standard libraries
 #include <string>
-
 
 namespace testing {
 
@@ -29,9 +27,7 @@ namespace testing {
   /// @{
 
   // instantiation of the standard ProviderSetupClass for this provider
-  template
-  struct ProviderSetupClass<lar::example::ShowerCalibrationGaloreFromPID>;
-
+  template struct ProviderSetupClass<lar::example::ShowerCalibrationGaloreFromPID>;
 
   /**
    * @brief Environment setup helper for ShowerCalibrationGaloreFromPID
@@ -59,24 +55,19 @@ namespace testing {
    *
    */
   template <typename TestEnv>
-  struct SimpleEnvironmentSetupClass
-    <lar::example::ShowerCalibrationGaloreFromPID, TestEnv>
-  {
+  struct SimpleEnvironmentSetupClass<lar::example::ShowerCalibrationGaloreFromPID, TestEnv> {
     static lar::example::ShowerCalibrationGaloreFromPID* setup(TestEnv& env)
-      {
-        return SimpleEnvironmentStandardSetupByName<
-          lar::example::ShowerCalibrationGaloreFromPID, // provider class
-          lar::example::ShowerCalibrationGalore,        // providet interface
-          TestEnv
-          >
-          (env, "ShowerCalibrationGaloreService"); // configuration key
-      }
+    {
+      return SimpleEnvironmentStandardSetupByName<
+        lar::example::ShowerCalibrationGaloreFromPID,    // provider class
+        lar::example::ShowerCalibrationGalore,           // providet interface
+        TestEnv>(env, "ShowerCalibrationGaloreService"); // configuration key
+    }
   }; // SimpleEnvironmentSetupClass<ShowerCalibrationGaloreFromPID>
 
   /// @}
   // END ShowerCalibrationGalore -----------------------------------------------
 
 } // namespace testing
-
 
 #endif // LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALOREFROMPIDTESTHELPERS_H

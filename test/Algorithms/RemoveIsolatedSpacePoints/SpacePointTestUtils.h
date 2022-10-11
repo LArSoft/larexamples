@@ -17,12 +17,11 @@
 #define LAREXAMPLES_TEST_ALGORITHMS_REMOVEISOLATEDSPACEPOINTS_SPACEPOINTTESTUTILS_H
 
 // LArSoft libraries
-#include "lardataobj/RecoBase/SpacePoint.h"
 #include "larcorealg/Geometry/BoxBoundedGeo.h"
+#include "lardataobj/RecoBase/SpacePoint.h"
 
 // C/C++ standard libraries
 #include <vector>
-
 
 namespace lar {
   namespace example {
@@ -40,8 +39,7 @@ namespace lar {
        *
        * Points are uncorrelated.
        */
-      recob::SpacePoint MakeSpacePoint
-        (int ID, double const* pos, double error = 0.);
+      recob::SpacePoint MakeSpacePoint(int ID, double const* pos, double error = 0.);
 
       /**
        * @brief Creates space points distributed in a grid
@@ -59,18 +57,15 @@ namespace lar {
        * Points have an uncertainty of @f$ s/\sqrt{12} @f$, with @f$ s @f$
        * the step size.
        */
-      unsigned int FillSpacePointGrid(
-        std::vector<recob::SpacePoint>& spacePoints,
-        geo::BoxBoundedGeo const& box,
-        double stepSize
-        );
+      unsigned int FillSpacePointGrid(std::vector<recob::SpacePoint>& spacePoints,
+                                      geo::BoxBoundedGeo const& box,
+                                      double stepSize);
 
       /// @}
       // END RemoveIsolatedSpacePoints group -----------------------------------
 
     } // namespace tests
-  } // namespace example
+  }   // namespace example
 } // namespace lar
-
 
 #endif // LAREXAMPLES_TEST_ALGORITHMS_REMOVEISOLATEDSPACEPOINTS_SPACEPOINTTESTUTILS_H

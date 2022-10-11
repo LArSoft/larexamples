@@ -16,19 +16,18 @@
 #include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Principal/Event.h"
 #include "art/Framework/Principal/Handle.h" // art::ValidHandle
-#include "canvas/Persistency/Common/FindOneP.h"
 #include "canvas/Persistency/Common/Assns.h"
+#include "canvas/Persistency/Common/FindOneP.h"
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Utilities/InputTag.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
-#include "fhiclcpp/types/Atom.h"
 #include "cetlib_except/exception.h"
+#include "fhiclcpp/types/Atom.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // Boost
 #include <boost/test/test_tools.hpp> // BOOST_CHECK_EQUAL()
 
 // C/C++ standard libraries
-
 
 namespace lar::example::tests {
 
@@ -52,23 +51,19 @@ namespace lar::example::tests {
    *   the collection
    *
    */
-  class DumpCheatTracks: public art::EDAnalyzer {
+  class DumpCheatTracks : public art::EDAnalyzer {
   public:
-
     struct Config {
 
-      using Name    = fhicl::Name;
+      using Name = fhicl::Name;
       using Comment = fhicl::Comment;
 
-      fhicl::Atom<art::InputTag> tracks{
-        Name("tracks"),
-        Comment("label of the data product with the cheat tracks")
-      };
+      fhicl::Atom<art::InputTag> tracks{Name("tracks"),
+                                        Comment("label of the data product with the cheat tracks")};
 
       fhicl::Atom<unsigned int> expectedCount{
         Name("expectedCount"),
-        Comment("number of expected tracks in the data product")
-      };
+        Comment("number of expected tracks in the data product")};
 
     }; // Config
 
@@ -81,41 +76,36 @@ namespace lar::example::tests {
       , fExpectedCount(config().expectedCount())
     {
       consumes<std::vector<lar::example::CheatTrack>>(fTrackTag);
-      consumes<art::Assns<lar::example::CheatTrack, simb::MCParticle>>
-        (fTrackTag);
+      consumes<art::Assns<lar::example::CheatTrack, simb::MCParticle>>(fTrackTag);
     }
 
   private:
     void analyze(art::Event const& event) override;
 
-    art::InputTag fTrackTag; ///< Label of the input data product.
+    art::InputTag fTrackTag;     ///< Label of the input data product.
     unsigned int fExpectedCount; ///< Expected number of tracks.
-  }; // class DumpCheatTracks
-
+  };                             // class DumpCheatTracks
 
   /// @}
   // END TotallyCheatTracks group ------------------------------------------
 
 } // namespace lar::example::tests
 
-
-
 //------------------------------------------------------------------------------
 //--- DumpCheatTracks
 //---
-void lar::example::tests::DumpCheatTracks::analyze(art::Event const& event) {
+void lar::example::tests::DumpCheatTracks::analyze(art::Event const& event)
+{
 
   //
   // read the input
   //
-  auto const& trackHandle
-    = event.getValidHandle<std::vector<lar::example::CheatTrack>>(fTrackTag);
+  auto const& trackHandle = event.getValidHandle<std::vector<lar::example::CheatTrack>>(fTrackTag);
   auto const& tracks = *trackHandle;
-  art::FindOneP<simb::MCParticle> trackToPart{ trackHandle, event, fTrackTag };
+  art::FindOneP<simb::MCParticle> trackToPart{trackHandle, event, fTrackTag};
 
   std::size_t const nTracks = tracks.size();
   BOOST_TEST(nTracks == fExpectedCount);
-
 
   for (std::size_t iTrack = 0U; iTrack < nTracks; ++iTrack) {
 
@@ -124,9 +114,7 @@ void lar::example::tests::DumpCheatTracks::analyze(art::Event const& event) {
 
     mf::LogVerbatim log("DumpCheatTracks");
     log << "[#" << iTrack << "] " << track;
-    if (partPtr) {
-      log << " associated to particle:\n    " << *partPtr;
-    }
+    if (partPtr) { log << " associated to particle:\n    " << *partPtr; }
     else {
       log << " not associated to any particle";
     }
@@ -134,7 +122,6 @@ void lar::example::tests::DumpCheatTracks::analyze(art::Event const& event) {
   } // for (iTrack)
 
 } // lar::example::tests::DumpCheatTracks::analyze()
-
 
 //------------------------------------------------------------------------------
 DEFINE_ART_MODULE(lar::example::tests::DumpCheatTracks)

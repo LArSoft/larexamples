@@ -12,8 +12,8 @@
  */
 
 // LArSoft libraries
-#include "larexamples/Algorithms/TotallyCheatTracks/TotallyCheatTrackingAlg.h"
 #include "larexamples/Algorithms/TotallyCheatTracks/CheatTrackData/CheatTrack.h"
+#include "larexamples/Algorithms/TotallyCheatTracks/TotallyCheatTrackingAlg.h"
 #include "nusimdata/SimulationBase/MCParticle.h"
 
 // framework libraries
@@ -25,13 +25,12 @@
 #include "canvas/Persistency/Common/Assns.h"
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Utilities/InputTag.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "fhiclcpp/types/Atom.h"
 #include "fhiclcpp/types/Table.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
 #include <memory> // std::make_unique()
-
 
 namespace lar {
   namespace example {
@@ -70,39 +69,38 @@ namespace lar {
      *     particle, in GeV
      *
      */
-    class TotallyCheatTracker: public art::EDProducer {
+    class TotallyCheatTracker : public art::EDProducer {
 
-        public:
-
+    public:
       /// Module configuration data
       struct Config {
 
-        using Name    = fhicl::Name;
+        using Name = fhicl::Name;
         using Comment = fhicl::Comment;
 
-        fhicl::Atom<art::InputTag> particles {
+        fhicl::Atom<art::InputTag> particles{
           Name("particles"),
           Comment("the data product of simulated particles to be processed"),
           "largeant" // default
-          };
+        };
 
-        fhicl::Atom<double> minLength {
+        fhicl::Atom<double> minLength{
           Name("minLength"),
           Comment("minimum length of particle trajectory [cm]"),
           1.0 // default
-          };
+        };
 
-        fhicl::Atom<double> minEnergy {
+        fhicl::Atom<double> minEnergy{
           Name("minEnergy"),
           Comment("minimum energy of particle [GeV]"),
           1.0 // default
-          };
+        };
 
-        fhicl::Table<lar::example::TotallyCheatTrackingAlg::Config> algoConfig {
+        fhicl::Table<lar::example::TotallyCheatTrackingAlg::Config> algoConfig{
           Name("algoConfig"),
           Comment("configuration of TotallyCheatTrackingAlg algorithm"),
           lar::example::TotallyCheatTrackingAlg::Config{} // default
-          };
+        };
 
       }; // Config
 
@@ -112,15 +110,12 @@ namespace lar {
       /// Constructor; see the class documentation for the configuration
       explicit TotallyCheatTracker(Parameters const& config);
 
-
       virtual void produce(art::Event& event) override;
-
 
       /// Returns whether the `particle` satisfies the selection criteria.
       bool acceptParticle(simb::MCParticle const& particle) const;
 
-
-        private:
+    private:
       art::InputTag particleTag; ///< Label of the input data product.
 
       double minLength; ///< Minimum particle length [cm]
@@ -129,19 +124,15 @@ namespace lar {
       /// Reconstruction algorithm.
       lar::example::TotallyCheatTrackingAlg trackMaker;
 
-
     }; // class TotallyCheatTracker
 
   } // namespace example
 } // namespace lar
 
-
-
 //------------------------------------------------------------------------------
 //--- TotallyCheatTracker
 //---
-lar::example::TotallyCheatTracker::TotallyCheatTracker
-  (Parameters const& config)
+lar::example::TotallyCheatTracker::TotallyCheatTracker(Parameters const& config)
   : EDProducer{config}
   , particleTag(config().particles())
   , minLength(config().minLength())
@@ -156,27 +147,24 @@ lar::example::TotallyCheatTracker::TotallyCheatTracker
 
 } // lar::example::TotallyCheatTracker::TotallyCheatTracker()
 
-
 //------------------------------------------------------------------------------
-void lar::example::TotallyCheatTracker::produce(art::Event& event) {
+void lar::example::TotallyCheatTracker::produce(art::Event& event)
+{
 
   //
   // read the input
   //
-  auto particleHandle
-    = event.getValidHandle<std::vector<simb::MCParticle>>(particleTag);
+  auto particleHandle = event.getValidHandle<std::vector<simb::MCParticle>>(particleTag);
   auto const& particles = *particleHandle;
 
   //
   // prepare the output structures
   //
   auto tracks = std::make_unique<std::vector<lar::example::CheatTrack>>();
-  auto trackToPart =
-    std::make_unique<art::Assns<lar::example::CheatTrack, simb::MCParticle>>();
+  auto trackToPart = std::make_unique<art::Assns<lar::example::CheatTrack, simb::MCParticle>>();
 
   art::PtrMaker<simb::MCParticle> makePartPtr(event, particleHandle.id());
   art::PtrMaker<lar::example::CheatTrack> makeTrackPtr(event);
-
 
   //
   // set up the algorithm
@@ -213,19 +201,16 @@ void lar::example::TotallyCheatTracker::produce(art::Event& event) {
   // store the data products into the event (and print a short summary)
   //
   mf::LogInfo("TotallyCheatTracker")
-    << "Reconstructed " << tracks->size() << " tracks out of "
-    << particleHandle->size() << " particles from '"
-    << particleTag.encode() << "'";
+    << "Reconstructed " << tracks->size() << " tracks out of " << particleHandle->size()
+    << " particles from '" << particleTag.encode() << "'";
 
   event.put(std::move(tracks));
   event.put(std::move(trackToPart));
 
 } // lar::example::TotallyCheatTracker::produce()
 
-
 //------------------------------------------------------------------------------
-bool lar::example::TotallyCheatTracker::acceptParticle
-  (simb::MCParticle const& particle) const
+bool lar::example::TotallyCheatTracker::acceptParticle(simb::MCParticle const& particle) const
 {
   // skip empty particle
   if (particle.NumberTrajectoryPoints() == 0) return false;
@@ -243,6 +228,5 @@ bool lar::example::TotallyCheatTracker::acceptParticle
 
 //------------------------------------------------------------------------------
 DEFINE_ART_MODULE(lar::example::TotallyCheatTracker)
-
 
 //------------------------------------------------------------------------------

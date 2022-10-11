@@ -13,7 +13,6 @@
 #ifndef LAREXAMPLES_ALGORITHMS_TOTALLYCHEATTRACKS_CHEATTRACKDATA_CHEATTRACK_H
 #define LAREXAMPLES_ALGORITHMS_TOTALLYCHEATTRACKS_CHEATTRACKDATA_CHEATTRACK_H
 
-
 // LArSoft libraries
 #include "lardataobj/RecoBase/Trajectory.h"
 
@@ -24,7 +23,6 @@
 #include <ostream>
 #include <string>
 #include <utility> // std::move(), std::forward()
-
 
 namespace lar {
 
@@ -51,8 +49,7 @@ namespace lar {
      */
     class CheatTrack {
 
-        public:
-
+    public:
       using PDGID_t = int; ///< Type of the particle ID.
 
       /// Value of a particle ID that denotes it as invalid.
@@ -69,11 +66,7 @@ namespace lar {
        * The trajectory in `traj` is moved into this object, and it will not be
        * valid in the caller scope any more.
        */
-      CheatTrack(recob::Trajectory&& traj, PDGID_t pid)
-        : fTraj(std::move(traj))
-        , fPDGID(pid)
-        {}
-
+      CheatTrack(recob::Trajectory&& traj, PDGID_t pid) : fTraj(std::move(traj)), fPDGID(pid) {}
 
       /// Returns the trajectory of this track.
       recob::Trajectory const& trajectory() const { return fTraj; }
@@ -102,8 +95,7 @@ namespace lar {
       static constexpr unsigned int DefaultDumpVerbosity = 1U;
 
       /// Maximum verbosity level.
-      static constexpr unsigned int MaxDumpVerbosity
-        = recob::Trajectory::MaxDumpVerbosity;
+      static constexpr unsigned int MaxDumpVerbosity = recob::Trajectory::MaxDumpVerbosity;
 
       //@{
       /**
@@ -122,36 +114,37 @@ namespace lar {
        *
        */
       template <typename Stream>
-      void dump(
-        Stream&& out, unsigned int verbosity,
-        std::string indent, std::string firstIndent
-        ) const;
+      void dump(Stream&& out,
+                unsigned int verbosity,
+                std::string indent,
+                std::string firstIndent) const;
       template <typename Stream>
-      void dump(
-        Stream&& out, unsigned int verbosity = DefaultDumpVerbosity,
-        std::string indent = ""
-        ) const
-        { dump(std::forward<Stream>(out), verbosity, indent, indent); }
+      void dump(Stream&& out,
+                unsigned int verbosity = DefaultDumpVerbosity,
+                std::string indent = "") const
+      {
+        dump(std::forward<Stream>(out), verbosity, indent, indent);
+      }
       //@}
 
       ///@}
 
       // --- END printing data -------------------------------------------------
 
-        private:
-
+    private:
       recob::Trajectory fTraj;            ///< The trejectory of this track.
       PDGID_t fPDGID = InvalidParticleID; ///< Particle ID in PDG standard.
 
     }; // class CheatTrack
 
-
     /// Prints the content of the track into a text stream.
     /// @related lar::example::CheatTrack
     /// @ingroup TotallyCheatTracks
-    inline std::ostream& operator<<
-      (std::ostream& out, lar::example::CheatTrack const& track)
-      { track.dump(out); return out; }
+    inline std::ostream& operator<<(std::ostream& out, lar::example::CheatTrack const& track)
+    {
+      track.dump(out);
+      return out;
+    }
 
     /// @}
     // END TotallyCheatTracks group ------------------------------------------
@@ -160,30 +153,29 @@ namespace lar {
 
 } // namespace lar
 
-
 //------------------------------------------------------------------------------
 //---  template implementation
 //------------------------------------------------------------------------------
 template <typename Stream>
-void lar::example::CheatTrack::dump(
-  Stream&& out, unsigned int verbosity,
-  std::string indent, std::string firstIndent
-  ) const
+void lar::example::CheatTrack::dump(Stream&& out,
+                                    unsigned int verbosity,
+                                    std::string indent,
+                                    std::string firstIndent) const
 {
 
   // we could use ROOT's TDatabasePDG to get the name of the ID, but we'd rather
   // not depend on ROOT here...
-  out << firstIndent
-    << "particle: ";
+  out << firstIndent << "particle: ";
   auto const* pPDGinfo = TDatabasePDG::Instance()->GetParticle(particleId());
-  if (pPDGinfo) out << pPDGinfo->GetName() << " (ID=" << particleId() << ")";
-  else          out << "ID " << particleId();
+  if (pPDGinfo)
+    out << pPDGinfo->GetName() << " (ID=" << particleId() << ")";
+  else
+    out << "ID " << particleId();
   out << "; momentum: " << momentum() << " GeV/c; ";
   trajectory().Dump(std::forward<Stream>(out), verbosity, indent, "");
 
 } // lar::example::CheatTrack::dump()
 
 //------------------------------------------------------------------------------
-
 
 #endif // LAREXAMPLES_ALGORITHMS_TOTALLYCHEATTRACKS_CHEATTRACKDATA_CHEATTRACK_H

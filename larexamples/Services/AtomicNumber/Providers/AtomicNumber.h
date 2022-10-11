@@ -11,20 +11,20 @@
 #ifndef LAREXAMPLES_SERVICES_ATOMICNUMBER_PROVIDER_ATOMICNUMBER_H
 #define LAREXAMPLES_SERVICES_ATOMICNUMBER_PROVIDER_ATOMICNUMBER_H
 
-
 // support libraries
-namespace fhicl { class ParameterSet; }
+namespace fhicl {
+  class ParameterSet;
+}
 
 #include "fhiclcpp/types/Atom.h"
 #include "fhiclcpp/types/Comment.h"
 #include "fhiclcpp/types/Name.h"
 #include "fhiclcpp/types/Table.h"
 
-
 namespace lar {
-   namespace example {
+  namespace example {
 
-      /** **********************************************************************
+    /** **********************************************************************
        * @brief Provides information about the active material in the TPC.
        * @see @ref AtomicNumber "AtomicNumber example overview"
        * @ingroup AtomicNumber
@@ -38,65 +38,58 @@ namespace lar {
        *   material
        *
        */
-      class AtomicNumber {
-            public:
-         //---------------------------------------------------------------------
-         /// Collection of configuration parameters for the service
-         struct Config {
-            using Name = fhicl::Name;
-            using Comment = fhicl::Comment;
+    class AtomicNumber {
+    public:
+      //---------------------------------------------------------------------
+      /// Collection of configuration parameters for the service
+      struct Config {
+        using Name = fhicl::Name;
+        using Comment = fhicl::Comment;
 
-            fhicl::Atom<unsigned int> AtomicNumber {
-               Name("AtomicNumber"),
-               Comment("atomic number of the active material in the TPC"),
-               18U // default value
-            };
+        fhicl::Atom<unsigned int> AtomicNumber{
+          Name("AtomicNumber"),
+          Comment("atomic number of the active material in the TPC"),
+          18U // default value
+        };
 
-         }; // struct Config
+      }; // struct Config
 
-         /// Type describing all the parameters
-         using parameters_type = fhicl::Table<Config>;
+      /// Type describing all the parameters
+      using parameters_type = fhicl::Table<Config>;
 
+      //---------------------------------------------------------------------
+      /// Constructor from the complete configuration object
+      AtomicNumber(Config const& config) : Z_(config.AtomicNumber()) {}
 
-         //---------------------------------------------------------------------
-         /// Constructor from the complete configuration object
-         AtomicNumber(Config const& config)
-           : Z_(config.AtomicNumber())
-           {}
+      //---------------------------------------------------------------------
+      /// Constructor from a parameter set
+      AtomicNumber(fhicl::ParameterSet const& pset)
+        : AtomicNumber(parameters_type(pset, {"service_type"})())
+      {}
 
-         //---------------------------------------------------------------------
-         /// Constructor from a parameter set
-         AtomicNumber(fhicl::ParameterSet const& pset)
-           : AtomicNumber(parameters_type(pset, { "service_type" })())
-           {}
+      //---------------------------------------------------------------------
+      // copy and moving of service providers is "forbidden":
+      AtomicNumber(AtomicNumber const& pset) = delete;
+      AtomicNumber(AtomicNumber&& pset) = delete;
+      AtomicNumber& operator=(AtomicNumber const& pset) = delete;
+      AtomicNumber& operator=(AtomicNumber&& pset) = delete;
 
+      //---------------------------------------------------------------------
+      /// @name Accessors
+      /// @{
 
-         //---------------------------------------------------------------------
-         // copy and moving of service providers is "forbidden":
-         AtomicNumber(AtomicNumber const& pset) = delete;
-         AtomicNumber(AtomicNumber&& pset) = delete;
-         AtomicNumber& operator= (AtomicNumber const& pset) = delete;
-         AtomicNumber& operator= (AtomicNumber&& pset) = delete;
+      /// Returns the atomic number
+      unsigned int Z() const { return Z_; }
 
+      /// @}
 
-         //---------------------------------------------------------------------
-         /// @name Accessors
-         /// @{
+      //---------------------------------------------------------------------
+    private:
+      unsigned int Z_; ///< atomic number
 
-         /// Returns the atomic number
-         unsigned int Z() const { return Z_; }
+    }; // AtomicNumber
 
-         /// @}
-
-
-         //---------------------------------------------------------------------
-            private:
-         unsigned int Z_; ///< atomic number
-
-      }; // AtomicNumber
-
-   } // namespace example
+  } // namespace example
 } // namespace lar
-
 
 #endif // LAREXAMPLES_SERVICES_ATOMICNUMBER_PROVIDER_ATOMICNUMBER_H

@@ -13,12 +13,12 @@
 /// LArSoft namespace
 namespace lar {
 
-   /// LArSoft examples
-   namespace example {
+  /// LArSoft examples
+  namespace example {
 
-      /// Tests for LArSoft examples
-      namespace tests {}
+    /// Tests for LArSoft examples
+    namespace tests {}
 
-   } // namespace example
+  } // namespace example
 
 } // namespace lar

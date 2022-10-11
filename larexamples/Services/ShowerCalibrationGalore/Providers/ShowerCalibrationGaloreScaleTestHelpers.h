@@ -10,17 +10,15 @@
  *
  */
 
-
 #ifndef LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALORESCALETESTHELPERS_H
 #define LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALORESCALETESTHELPERS_H
 
 /// LArSoft libraries
-#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreScale.h"
 #include "larcorealg/TestUtils/ProviderTestHelpers.h"
+#include "larexamples/Services/ShowerCalibrationGalore/Providers/ShowerCalibrationGaloreScale.h"
 
 // C/C++ standard libraries
 #include <string>
-
 
 namespace testing {
 
@@ -29,9 +27,7 @@ namespace testing {
   /// @{
 
   // instantiation of the standard ProviderSetupClass for this provider
-  template
-  struct ProviderSetupClass<lar::example::ShowerCalibrationGaloreScale>;
-
+  template struct ProviderSetupClass<lar::example::ShowerCalibrationGaloreScale>;
 
   /**
    * @brief Environment setup helper for ShowerCalibrationGaloreScale
@@ -58,25 +54,19 @@ namespace testing {
    *
    */
   template <typename TestEnv>
-  struct SimpleEnvironmentSetupClass
-    <lar::example::ShowerCalibrationGaloreScale, TestEnv>
-  {
+  struct SimpleEnvironmentSetupClass<lar::example::ShowerCalibrationGaloreScale, TestEnv> {
     static lar::example::ShowerCalibrationGaloreScale* setup(TestEnv& env)
-      {
-        return SimpleEnvironmentStandardSetupByName<
-          lar::example::ShowerCalibrationGaloreScale, // provider class
-          lar::example::ShowerCalibrationGalore,      // provider interface
-          TestEnv
-          >
-          (env, "ShowerCalibrationGaloreService"); // configuration key
-      }
+    {
+      return SimpleEnvironmentStandardSetupByName<
+        lar::example::ShowerCalibrationGaloreScale,      // provider class
+        lar::example::ShowerCalibrationGalore,           // provider interface
+        TestEnv>(env, "ShowerCalibrationGaloreService"); // configuration key
+    }
   }; // SimpleEnvironmentSetupClass<ShowerCalibrationGaloreScale>
-
 
   /// @}
   // END ShowerCalibrationGalore -----------------------------------------------
 
 } // namespace testing
-
 
 #endif // LAREXAMPLES_SERVICES_SHOWERCALIBRATIONGALORE_PROVIDERS_SHOWERCALIBRATIONGALORESCALETESTHELPERS_H

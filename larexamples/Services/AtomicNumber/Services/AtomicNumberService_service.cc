@@ -9,11 +9,9 @@
  * Implementation file.
  */
 
-
 // LArSoft libraries
-#include "larexamples/Services/AtomicNumber/Services/AtomicNumberService.h"
 #include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
-
+#include "larexamples/Services/AtomicNumber/Services/AtomicNumberService.h"
 
 // -----------------------------------------------------------------------------
 DEFINE_ART_SERVICE(lar::example::AtomicNumberService)

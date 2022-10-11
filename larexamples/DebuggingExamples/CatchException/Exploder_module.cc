@@ -6,19 +6,17 @@
  * @ingroup CatchException
  */
 
-
 // framework libraries
 #include "art/Framework/Core/EDAnalyzer.h"
 #include "art/Framework/Core/ModuleMacros.h"
 #include "canvas/Utilities/Exception.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "fhiclcpp/types/Atom.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
 #include <array>
+#include <new>       // std::bad_alloc
 #include <stdexcept> // std::out_of_range, std::length_error
-#include <new> // std::bad_alloc
-
 
 namespace lar {
   namespace example {
@@ -39,28 +37,27 @@ namespace lar {
      *   `std::out_of_range` exception at the specified loop number
      *
      */
-    class Exploder: public art::EDAnalyzer {
-        public:
-
+    class Exploder : public art::EDAnalyzer {
+    public:
       struct Config {
 
-        fhicl::Atom<bool> ManageBadAlloc {
+        fhicl::Atom<bool> ManageBadAlloc{
           fhicl::Name("ManageBadAlloc"),
           fhicl::Comment("whether to catch the std::bad_alloc we throw"),
           true // default
-          };
+        };
 
-        fhicl::Atom<bool> ManageOutOfRange {
+        fhicl::Atom<bool> ManageOutOfRange{
           fhicl::Name("ManageOutOfRange"),
           fhicl::Comment("whether to catch the std::out_of_range we throw"),
           true // default
-          };
+        };
 
-        fhicl::Atom<bool> ManageArtException {
+        fhicl::Atom<bool> ManageArtException{
           fhicl::Name("ManageArtException"),
           fhicl::Comment("whether to catch the art::Exception we throw"),
           true // default
-          };
+        };
 
       }; // struct Config
 
@@ -72,9 +69,7 @@ namespace lar {
       /// Executes the iterations.
       virtual void analyze(art::Event const&) override;
 
-
-        private:
-
+    private:
       bool fManageBadAlloc;
       bool fManageOutOfRange;
       bool fManageArtException;
@@ -90,7 +85,6 @@ namespace lar {
 
     }; // class Exploder
 
-
   } // namespace example
 } // namespace lar
 
@@ -100,11 +94,11 @@ lar::example::Exploder::Exploder(Parameters const& config)
   , fManageBadAlloc(config().ManageBadAlloc())
   , fManageOutOfRange(config().ManageOutOfRange())
   , fManageArtException(config().ManageArtException())
-  {}
-
+{}
 
 //------------------------------------------------------------------------------
-void lar::example::Exploder::analyze(art::Event const&) {
+void lar::example::Exploder::analyze(art::Event const&)
+{
 
   //
   // std::length_error
@@ -113,7 +107,8 @@ void lar::example::Exploder::analyze(art::Event const&) {
     try {
       throwBadAlloc();
     }
-    catch (std::bad_alloc const&) {}
+    catch (std::bad_alloc const&) {
+    }
   }
   else {
     throwBadAlloc();
@@ -126,7 +121,8 @@ void lar::example::Exploder::analyze(art::Event const&) {
     try {
       throwOutOfRange();
     }
-    catch (std::out_of_range const&) {}
+    catch (std::out_of_range const&) {
+    }
   }
   else {
     throwOutOfRange();
@@ -139,7 +135,8 @@ void lar::example::Exploder::analyze(art::Event const&) {
     try {
       throwArtException();
     }
-    catch (art::Exception const&) {}
+    catch (art::Exception const&) {
+    }
   }
   else {
     throwArtException();
@@ -147,9 +144,9 @@ void lar::example::Exploder::analyze(art::Event const&) {
 
 } // lar::example::Exploder::analyze()
 
-
 //------------------------------------------------------------------------------
-unsigned int lar::example::Exploder::throwOutOfRange() {
+unsigned int lar::example::Exploder::throwOutOfRange()
+{
 
   std::vector<int> intData(5, 0);
 
@@ -166,33 +163,30 @@ unsigned int lar::example::Exploder::throwOutOfRange() {
   return intTotal;
 } // lar::example::Exploder::throwOutOfRange()
 
-
 //------------------------------------------------------------------------------
-void lar::example::Exploder::throwBadAlloc() {
+void lar::example::Exploder::throwBadAlloc()
+{
 
   using OneMebibyte = std::array<unsigned char, 1048576U>;
 
   std::vector<OneMebibyte> manyMebibytes;
 
   // this is allowed, but we don't have enough memory
-  mf::LogVerbatim("Exploder") << "Now allocating: " << manyMebibytes.max_size()
-    << " x " << sizeof(OneMebibyte) << " bytes";
+  mf::LogVerbatim("Exploder") << "Now allocating: " << manyMebibytes.max_size() << " x "
+                              << sizeof(OneMebibyte) << " bytes";
   manyMebibytes.resize(manyMebibytes.max_size());
 
 } // lar::example::Exploder::throwBadAlloc()
 
-
 //------------------------------------------------------------------------------
-void lar::example::Exploder::throwArtException() {
+void lar::example::Exploder::throwArtException()
+{
 
-  throw art::Exception(art::errors::LogicError)
-    << "I hate the world and I am vengeful.\n";
+  throw art::Exception(art::errors::LogicError) << "I hate the world and I am vengeful.\n";
 
 } // lar::example::Exploder::throwArtException()
 
-
 //------------------------------------------------------------------------------
 DEFINE_ART_MODULE(lar::example::Exploder)
-
 
 //------------------------------------------------------------------------------

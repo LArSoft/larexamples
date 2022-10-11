@@ -12,10 +12,10 @@
  */
 
 // LArSoft libraries
-#include "larexamples/Algorithms/RemoveIsolatedSpacePoints/SpacePointIsolationAlg.h"
-#include "lardataobj/RecoBase/SpacePoint.h"
-#include "larcore/Geometry/Geometry.h"
 #include "larcore/CoreUtils/ServiceUtil.h"
+#include "larcore/Geometry/Geometry.h"
+#include "lardataobj/RecoBase/SpacePoint.h"
+#include "larexamples/Algorithms/RemoveIsolatedSpacePoints/SpacePointIsolationAlg.h"
 
 // framework libraries
 #include "art/Framework/Core/EDProducer.h"
@@ -23,13 +23,12 @@
 #include "art/Framework/Principal/Event.h"
 #include "art/Framework/Principal/Handle.h" // art::ValidHandle
 #include "canvas/Utilities/InputTag.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "fhiclcpp/types/Atom.h"
 #include "fhiclcpp/types/Table.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
 #include <memory> // std::make_unique()
-
 
 namespace lar {
   namespace example {
@@ -68,25 +67,21 @@ namespace lar {
      *   isolation algorithm (see `SpacePointIsolationAlg` documentation)
      *
      */
-    class RemoveIsolatedSpacePoints: public art::EDProducer {
+    class RemoveIsolatedSpacePoints : public art::EDProducer {
 
-        public:
-
+    public:
       /// Module configuration data
       struct Config {
 
-        using Name    = fhicl::Name;
+        using Name = fhicl::Name;
         using Comment = fhicl::Comment;
 
-        fhicl::Atom<art::InputTag> spacePoints{
-          Name("spacePoints"),
-          Comment("the space points to be filtered")
-          };
+        fhicl::Atom<art::InputTag> spacePoints{Name("spacePoints"),
+                                               Comment("the space points to be filtered")};
 
         fhicl::Table<SpacePointIsolationAlg::Config> isolation{
           Name("isolation"),
-          Comment("settings for the isolation algorithm")
-          };
+          Comment("settings for the isolation algorithm")};
 
       }; // Config
 
@@ -96,45 +91,36 @@ namespace lar {
       /// Constructor; see the class documentation for the configuration
       explicit RemoveIsolatedSpacePoints(Parameters const& config);
 
-
       virtual void produce(art::Event& event) override;
 
-
-        private:
+    private:
       art::InputTag spacePointsLabel; ///< label of the input data product
 
       SpacePointIsolationAlg isolAlg; ///< instance of the algorithm
 
     }; // class RemoveIsolatedSpacePoints
 
-
   } // namespace example
 } // namespace lar
-
-
 
 //------------------------------------------------------------------------------
 //--- RemoveIsolatedSpacePoints
 //---
-lar::example::RemoveIsolatedSpacePoints::RemoveIsolatedSpacePoints
-  (Parameters const& config)
-  : EDProducer{config}
-  , spacePointsLabel(config().spacePoints())
-  , isolAlg(config().isolation())
+lar::example::RemoveIsolatedSpacePoints::RemoveIsolatedSpacePoints(Parameters const& config)
+  : EDProducer{config}, spacePointsLabel(config().spacePoints()), isolAlg(config().isolation())
 {
   consumes<std::vector<recob::SpacePoint>>(spacePointsLabel);
   produces<std::vector<recob::SpacePoint>>();
 } // lar::example::RemoveIsolatedSpacePoints::RemoveIsolatedSpacePoints()
 
-
 //------------------------------------------------------------------------------
-void lar::example::RemoveIsolatedSpacePoints::produce(art::Event& event) {
+void lar::example::RemoveIsolatedSpacePoints::produce(art::Event& event)
+{
 
   //
   // read the input
   //
-  auto spacePointHandle
-    = event.getValidHandle<std::vector<recob::SpacePoint>>(spacePointsLabel);
+  auto spacePointHandle = event.getValidHandle<std::vector<recob::SpacePoint>>(spacePointsLabel);
 
   //
   // set up the algorithm
@@ -148,8 +134,7 @@ void lar::example::RemoveIsolatedSpacePoints::produce(art::Event& event) {
 
   // the return value is a list of indices of non-isolated space points
   auto const& spacePoints = *spacePointHandle;
-  std::vector<size_t> socialPointIndices
-    = isolAlg.removeIsolatedPoints(spacePoints);
+  std::vector<size_t> socialPointIndices = isolAlg.removeIsolatedPoints(spacePoints);
 
   //
   // extract and save the results
@@ -157,7 +142,7 @@ void lar::example::RemoveIsolatedSpacePoints::produce(art::Event& event) {
   auto socialSpacePoints = std::make_unique<std::vector<recob::SpacePoint>>();
 
   socialSpacePoints->reserve(socialPointIndices.size()); // preallocate
-  for (size_t index: socialPointIndices)
+  for (size_t index : socialPointIndices)
     socialSpacePoints->push_back(spacePoints[index]);
 
   mf::LogInfo("RemoveIsolatedSpacePoints")
@@ -168,9 +153,7 @@ void lar::example::RemoveIsolatedSpacePoints::produce(art::Event& event) {
 
 } // lar::example::RemoveIsolatedSpacePoints::produce()
 
-
 //------------------------------------------------------------------------------
 DEFINE_ART_MODULE(lar::example::RemoveIsolatedSpacePoints)
-
 
 //------------------------------------------------------------------------------

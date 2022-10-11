@@ -10,29 +10,27 @@
 #ifndef LAREXAMPLES_ALGORITHMS_REMOVEISOLATEDSPACEPOINTS_SPACEPOINTISOLATIONALG_H
 #define LAREXAMPLES_ALGORITHMS_REMOVEISOLATEDSPACEPOINTS_SPACEPOINTISOLATIONALG_H
 
-
 // LArSoft libraries
-#include "larexamples/Algorithms/RemoveIsolatedSpacePoints/PointIsolationAlg.h"
 #include "lardataobj/RecoBase/SpacePoint.h"
-
+#include "larexamples/Algorithms/RemoveIsolatedSpacePoints/PointIsolationAlg.h"
 
 // infrastructure and utilities
 #include "cetlib/pow.h" // cet::square()
+#include "fhiclcpp/ParameterSet.h"
+#include "fhiclcpp/types/Atom.h"
 #include "fhiclcpp/types/Comment.h"
 #include "fhiclcpp/types/Name.h"
-#include "fhiclcpp/types/Atom.h"
 #include "fhiclcpp/types/Table.h"
-#include "fhiclcpp/ParameterSet.h"
 
 // C/C++ standard libraries
-#include <vector>
+#include <memory>      // std::unique_ptr<>
 #include <type_traits> // std::decay_t<>, std::is_base_of<>
-#include <memory> // std::unique_ptr<>
-
+#include <vector>
 
 // forward declarations
-namespace geo { class GeometryCore; }
-
+namespace geo {
+  class GeometryCore;
+}
 
 namespace lar {
   namespace example {
@@ -103,10 +101,9 @@ namespace lar {
      */
     class SpacePointIsolationAlg {
 
-        public:
+    public:
       /// Type of coordinate in recob::SpacePoint (`double` in LArSoft 5)
       using Coord_t = std::decay_t<decltype(recob::SpacePoint().XYZ()[0])>;
-
 
       /// Algorithm configuration
       struct Config {
@@ -114,13 +111,9 @@ namespace lar {
         using Name = fhicl::Name;
         using Comment = fhicl::Comment;
 
-        fhicl::Atom<double> radius{
-          Name("radius"),
-          Comment("the radius for the isolation [cm]")
-        };
+        fhicl::Atom<double> radius{Name("radius"), Comment("the radius for the isolation [cm]")};
 
       }; // Config
-
 
       /// @{
       /// @name Construction and configuration
@@ -131,9 +124,7 @@ namespace lar {
        *
        * For the configuration, see `SpacePointIsolationAlg` documentation.
        */
-      SpacePointIsolationAlg(Config const& config)
-        : radius2(cet::square(config.radius()))
-        {}
+      SpacePointIsolationAlg(Config const& config) : radius2(cet::square(config.radius())) {}
 
       /**
        * @brief Constructor with configuration validation
@@ -147,7 +138,7 @@ namespace lar {
        */
       SpacePointIsolationAlg(fhicl::ParameterSet const& pset)
         : SpacePointIsolationAlg(fhicl::Table<Config>(pset, {})())
-        {}
+      {}
 
       /// @}
 
@@ -162,10 +153,12 @@ namespace lar {
        * This method must be called every time the geometry is changed.
        */
       void setup(geo::GeometryCore const& geometry)
-        { geom = &geometry; initialize(); }
+      {
+        geom = &geometry;
+        initialize();
+      }
 
       /// @}
-
 
       /**
        * @brief Returns the set of reconstructed 3D points that are not isolated
@@ -179,16 +172,12 @@ namespace lar {
        * points.
        */
       template <typename PointIter>
-      std::vector<size_t> removeIsolatedPoints
-        (PointIter begin, PointIter end) const
-        {
-          static_assert(
-            std::is_base_of<recob::SpacePoint, std::decay_t<decltype(*begin)>>::value,
-            "iterator does not point to recob::SpacePoint"
-            );
-          return isolationAlg->removeIsolatedPoints(begin, end);
-        }
-
+      std::vector<size_t> removeIsolatedPoints(PointIter begin, PointIter end) const
+      {
+        static_assert(std::is_base_of<recob::SpacePoint, std::decay_t<decltype(*begin)>>::value,
+                      "iterator does not point to recob::SpacePoint");
+        return isolationAlg->removeIsolatedPoints(begin, end);
+      }
 
       /**
        * @brief Returns the set of reconstructed 3D points that are not isolated
@@ -196,13 +185,12 @@ namespace lar {
        * @return a list of indices of non-isolated points in the vector
        * @see removeIsolatedPoints(PointIter, PointIter) const
        */
-      std::vector<size_t> removeIsolatedPoints
-        (std::vector<recob::SpacePoint> const& points) const
-        { return removeIsolatedPoints(points.begin(), points.end()); }
+      std::vector<size_t> removeIsolatedPoints(std::vector<recob::SpacePoint> const& points) const
+      {
+        return removeIsolatedPoints(points.begin(), points.end());
+      }
 
-
-
-        private:
+    private:
       /// Type of isolation algorithm
       using PointIsolationAlg_t = PointIsolationAlg<Coord_t>;
 
@@ -218,11 +206,9 @@ namespace lar {
       void initialize();
 
       /// Detects the boundaries of the volume to be sorted from the geometry
-      void fillAlgConfigFromGeometry
-        (PointIsolationAlg_t::Configuration_t& config);
+      void fillAlgConfigFromGeometry(PointIsolationAlg_t::Configuration_t& config);
 
     }; // class SpacePointIsolationAlg
-
 
     //--------------------------------------------------------------------------
     //--- PositionExtractor<recob::SpacePoint>
@@ -251,9 +237,5 @@ namespace lar {
 
   } // namespace example
 } // namespace lar
-
-
-
-
 
 #endif // LAREXAMPLES_ALGORITHMS_REMOVEISOLATEDSPACEPOINTS_SPACEPOINTISOLATIONALG_H

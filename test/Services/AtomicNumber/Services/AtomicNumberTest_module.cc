@@ -8,21 +8,20 @@
  */
 
 // LArSoft libraries
-#include "larexamples/Services/AtomicNumber/Services/AtomicNumberService.h"
 #include "larexamples/Services/AtomicNumber/Providers/AtomicNumber.h"
+#include "larexamples/Services/AtomicNumber/Services/AtomicNumberService.h"
 
 // framework and support libraries
-#include "fhiclcpp/ParameterSet.h"
-#include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Core/EDAnalyzer.h"
+#include "art/Framework/Core/ModuleMacros.h"
 #include "canvas/Utilities/Exception.h"
-
+#include "fhiclcpp/ParameterSet.h"
 
 namespace lar {
-   namespace example {
-      namespace tests {
+  namespace example {
+    namespace tests {
 
-         /**
+      /**
           * @brief Tests AtomicNumberService
           *
           * Configuration parameters
@@ -32,50 +31,42 @@ namespace lar {
           *   number
           *
           */
-         class AtomicNumberTest: public art::EDAnalyzer {
-               public:
+      class AtomicNumberTest : public art::EDAnalyzer {
+      public:
+        explicit AtomicNumberTest(fhicl::ParameterSet const& pset);
 
-            explicit AtomicNumberTest(fhicl::ParameterSet const& pset);
+        /// We don't really care about events
+        virtual void analyze(art::Event const&) override {}
 
-            /// We don't really care about events
-            virtual void analyze(art::Event const&) override {}
+        /// Test happens at begin job
+        virtual void beginJob() override;
 
-            /// Test happens at begin job
-            virtual void beginJob() override;
+      private:
+        unsigned int expected_Z; ///< expected atomic number
 
-               private:
+      }; // class AtomicNumberTest
 
-            unsigned int expected_Z; ///< expected atomic number
-
-         }; // class AtomicNumberTest
-
-      } // namespace tests
-   } // namespace example
+    } // namespace tests
+  }   // namespace example
 } // namespace lar
-
-
 
 //------------------------------------------------------------------------------
 
-lar::example::tests::AtomicNumberTest::AtomicNumberTest
-   (fhicl::ParameterSet const& pset)
-   : art::EDAnalyzer(pset)
-   , expected_Z(pset.get<unsigned int>("AtomicNumber"))
+lar::example::tests::AtomicNumberTest::AtomicNumberTest(fhicl::ParameterSet const& pset)
+  : art::EDAnalyzer(pset), expected_Z(pset.get<unsigned int>("AtomicNumber"))
 {}
 
+void lar::example::tests::AtomicNumberTest::beginJob()
+{
 
-void lar::example::tests::AtomicNumberTest::beginJob() {
+  auto const* Zprov = lar::providerFrom<lar::example::AtomicNumberService>();
 
-   auto const* Zprov = lar::providerFrom<lar::example::AtomicNumberService>();
-
-   unsigned int const Z = Zprov->Z();
-   if (Z != expected_Z) {
-      throw art::Exception(art::errors::LogicError)
-         << "Unexpected atomic number " << Z << ", should be " << expected_Z;
-   }
+  unsigned int const Z = Zprov->Z();
+  if (Z != expected_Z) {
+    throw art::Exception(art::errors::LogicError)
+      << "Unexpected atomic number " << Z << ", should be " << expected_Z;
+  }
 
 } // lar::example::tests::AtomicNumberTest::beginJob()
-
-
 
 DEFINE_ART_MODULE(lar::example::tests::AtomicNumberTest)

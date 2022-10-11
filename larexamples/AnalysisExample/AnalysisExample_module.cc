@@ -51,8 +51,8 @@
 // ending with C++ is standard.
 
 // LArSoft includes
-#include "larcore/Geometry/Geometry.h"
 #include "larcore/CoreUtils/ServiceUtil.h"
+#include "larcore/Geometry/Geometry.h"
 #include "larcorealg/Geometry/GeometryCore.h"
 #include "larcoreobj/SimpleTypesAndConstants/geo_types.h"
 #include "lardata/DetectorInfoServices/DetectorClocksService.h"
@@ -400,8 +400,7 @@ namespace lar {
     }
 
     //-----------------------------------------------------------------------
-    void
-    AnalysisExample::beginJob()
+    void AnalysisExample::beginJob()
     {
       // Get the detector length, to determine the maximum bin edge of one
       // of the histograms.
@@ -468,8 +467,7 @@ namespace lar {
     // that warning is to omit (or comment out) the name of the
     // parameter.
 
-    void
-    AnalysisExample::beginRun(const art::Run& /*run*/)
+    void AnalysisExample::beginRun(const art::Run& /*run*/)
     {
       // How to convert from number of electrons to GeV. The ultimate
       // source of this conversion factor is
@@ -480,8 +478,7 @@ namespace lar {
     }
 
     //-----------------------------------------------------------------------
-    void
-    AnalysisExample::analyze(const art::Event& event)
+    void AnalysisExample::analyze(const art::Event& event)
     {
       // Start by fetching some basic event information for our n-tuple.
       fEvent = event.id().event();
@@ -1134,8 +1131,7 @@ namespace lar {
 namespace {
 
   // Define a local function to calculate the detector diagonal.
-  double
-  DetectorDiagonal(geo::GeometryCore const& geom)
+  double DetectorDiagonal(geo::GeometryCore const& geom)
   {
     const double length = geom.DetLength();
     const double width = 2. * geom.DetHalfWidth();
@@ -1146,8 +1142,7 @@ namespace {
 
   // Define a comparison function to use in std::upper_bound and
   // std::lower_bound searches above.
-  bool
-  TDCIDETimeCompare(const sim::TDCIDE& lhs, const sim::TDCIDE& rhs)
+  bool TDCIDETimeCompare(const sim::TDCIDE& lhs, const sim::TDCIDE& rhs)
   {
     return lhs.first < rhs.first;
   }

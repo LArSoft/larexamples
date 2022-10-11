@@ -16,16 +16,15 @@
 #include "cetlib_except/exception.h"
 
 // C/C++ standard libraries
+#include <memory>    // std::make_unique()
 #include <stdexcept> // std::runtime_error()
-#include <memory> // std::make_unique()
-
 
 //------------------------------------------------------------------------------
 //--- lar::example::SpacePointIsolationAlg
 //---
 
-
-void lar::example::SpacePointIsolationAlg::initialize() {
+void lar::example::SpacePointIsolationAlg::initialize()
+{
 
   PointIsolationAlg_t::Configuration_t config;
 
@@ -41,27 +40,28 @@ void lar::example::SpacePointIsolationAlg::initialize() {
       << "Error in PointIsolationAlg configuration: " << e.what() << "\n";
   }
 
-  if (isolationAlg) isolationAlg->reconfigure(config);
-  else isolationAlg = std::make_unique<PointIsolationAlg_t>(config);
+  if (isolationAlg)
+    isolationAlg->reconfigure(config);
+  else
+    isolationAlg = std::make_unique<PointIsolationAlg_t>(config);
 
 } // lar::example::SpacePointIsolationAlg::initialize()
 
-
-void lar::example::SpacePointIsolationAlg::fillAlgConfigFromGeometry
-  (PointIsolationAlg_t::Configuration_t& config)
+void lar::example::SpacePointIsolationAlg::fillAlgConfigFromGeometry(
+  PointIsolationAlg_t::Configuration_t& config)
 {
   // merge the volumes from all TPCs
   auto iTPC = geom->begin_TPC(), tpcend = geom->end_TPC();
 
   // a TPC is (also) a bounded box:
-  geo::BoxBoundedGeo box = (geo::BoxBoundedGeo) *iTPC;
+  geo::BoxBoundedGeo box = (geo::BoxBoundedGeo)*iTPC;
 
-  while (++iTPC != tpcend) box.ExtendToInclude(*iTPC);
+  while (++iTPC != tpcend)
+    box.ExtendToInclude(*iTPC);
 
   // convert the box into the configuration structure
-  config.rangeX = { box.MinX(), box.MaxX() };
-  config.rangeY = { box.MinY(), box.MaxY() };
-  config.rangeZ = { box.MinZ(), box.MaxZ() };
+  config.rangeX = {box.MinX(), box.MaxX()};
+  config.rangeY = {box.MinY(), box.MaxY()};
+  config.rangeZ = {box.MinZ(), box.MaxZ()};
 
 } // lar::example::SpacePointIsolationAlg::fillAlgConfigFromGeometry()
-
