@@ -23,60 +23,51 @@
 // C/C++ standard libraries
 #include <memory> // std::make_unique()
 
-namespace lar {
-  namespace example {
-    namespace tests {
+namespace lar::example::tests {
 
-      // BEGIN RemoveIsolatedSpacePoints group ---------------------------------
-      /// @ingroup RemoveIsolatedSpacePoints
-      /// @{
-      /**
-       * @brief  Creates a collection of space points
-       *
-       * A collection of space points is added to the event.
-       * The points are spaced by the value of the `spacing` configuration
-       * parameter, in a cubic grid. Each TPC is independently filled,
-       * so that the TPC centre hosts a space point.
-       *
-       * The space points are not associated to anything.
-       *
-       * Configuration parameters
-       * =========================
-       *
-       * * *spacing* (real, _mandatory_): spacing between the points [cm]
-       *
-       */
-      class SpacePointMaker : public art::EDProducer {
+  // BEGIN RemoveIsolatedSpacePoints group ---------------------------------
+  /// @ingroup RemoveIsolatedSpacePoints
+  /// @{
+  /**
+   * @brief  Creates a collection of space points
+   *
+   * A collection of space points is added to the event.
+   * The points are spaced by the value of the `spacing` configuration
+   * parameter, in a cubic grid. Each TPC is independently filled,
+   * so that the TPC centre hosts a space point.
+   *
+   * The space points are not associated to anything.
+   *
+   * Configuration parameters
+   * =========================
+   *
+   * * *spacing* (real, _mandatory_): spacing between the points [cm]
+   *
+   */
+  class SpacePointMaker : public art::EDProducer {
+  public:
+    struct Config {
+      fhicl::Atom<double> spacing{fhicl::Name("spacing"),
+                                  fhicl::Comment("spacing between points [cm]")};
+    };
 
-      public:
-        struct Config {
+    using Parameters = art::EDProducer::Table<Config>;
 
-          using Name = fhicl::Name;
-          using Comment = fhicl::Comment;
+    /// Constructor; see the class documentation for the configuration
+    explicit SpacePointMaker(Parameters const& config);
 
-          fhicl::Atom<double> spacing{Name("spacing"), Comment("spacing between points [cm]")};
+    /// Create and add the points on each event (although they are the same)
+    void produce(art::Event& event) override;
 
-        }; // Config
+  private:
+    double spacing; ///< step size [cm]
 
-        using Parameters = art::EDProducer::Table<Config>;
+  }; // class SpacePointMaker
 
-        /// Constructor; see the class documentation for the configuration
-        explicit SpacePointMaker(Parameters const& config);
+  /// @}
+  // END RemoveIsolatedSpacePoints group -----------------------------------
 
-        /// Create and add the points on each event (although they are the same)
-        virtual void produce(art::Event& event) override;
-
-      private:
-        double spacing; ///< step size [cm]
-
-      }; // class SpacePointMaker
-
-      /// @}
-      // END RemoveIsolatedSpacePoints group -----------------------------------
-
-    } // namespace tests
-  }   // namespace example
-} // namespace lar
+} // namespace lar::example::testss
 
 //------------------------------------------------------------------------------
 //--- module implementation
@@ -86,12 +77,11 @@ lar::example::tests::SpacePointMaker::SpacePointMaker(Parameters const& config)
   : EDProducer{config}, spacing(config().spacing())
 {
   produces<std::vector<recob::SpacePoint>>();
-} // lar::example::tests::SpacePointMaker::SpacePointMaker()
+}
 
 //------------------------------------------------------------------------------
 void lar::example::tests::SpacePointMaker::produce(art::Event& event)
 {
-
   //
   // set up
   //
@@ -107,23 +97,16 @@ void lar::example::tests::SpacePointMaker::produce(art::Event& event)
   //
 
   // fill each TPC independently
-  for (auto const& TPC : geom->IterateTPCs()) {
-
+  for (auto const& TPC : geom->Iterate<geo::TPCGeo>()) {
     FillSpacePointGrid(*spacePoints, TPC, spacing);
-
-  } // for TPC
+  }
 
   //
   // result storage
   //
   mf::LogInfo("SpacePointMaker") << "Created " << spacePoints->size()
                                  << " space points using spacing " << spacing << " cm";
-
   event.put(std::move(spacePoints));
+}
 
-} // lar::example::tests::SpacePointMaker::produce()
-
-//------------------------------------------------------------------------------
 DEFINE_ART_MODULE(lar::example::tests::SpacePointMaker)
-
-//------------------------------------------------------------------------------

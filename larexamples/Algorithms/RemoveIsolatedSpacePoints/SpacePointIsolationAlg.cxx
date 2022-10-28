@@ -51,13 +51,12 @@ void lar::example::SpacePointIsolationAlg::fillAlgConfigFromGeometry(
   PointIsolationAlg_t::Configuration_t& config)
 {
   // merge the volumes from all TPCs
-  auto iTPC = geom->begin_TPC(), tpcend = geom->end_TPC();
+  geo::BoxBoundedGeo box{};
 
   // a TPC is (also) a bounded box:
-  geo::BoxBoundedGeo box = (geo::BoxBoundedGeo)*iTPC;
-
-  while (++iTPC != tpcend)
-    box.ExtendToInclude(*iTPC);
+  for (geo::BoxBoundedGeo const& tpc : geom->Iterate<geo::TPCGeo>()) {
+    box.ExtendToInclude(tpc);
+  }
 
   // convert the box into the configuration structure
   config.rangeX = {box.MinX(), box.MaxX()};
