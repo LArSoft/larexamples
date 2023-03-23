@@ -6,9 +6,7 @@
  * @see    AtomicNumber.h
  * @ingroup AtomicNumber
  *
- * This test expects a single configuration file to be specified as first
- * argument.
- *
+ * This test expects a single configuration file to be specified as first argument.
  */
 
 // LArSoft libraries
@@ -23,20 +21,10 @@
 #include <stdexcept> // std::runtime_error
 #include <string>
 
-// BEGIN AtomicNumber ----------------------------------------------------------
-/// @ingroup AtomicNumber
-/// @{
-
-//------------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
-
-  //
-  // configuration of the test
-  //
-
-  // provide a test name;
-  // the path to the configuration file will be taken from the first parameter
+  // provide a test name; the path to the configuration file will be taken from the first
+  // parameter
   testing::BasicEnvironmentConfiguration config(
     argc, argv, "ValidateAtomicNumberConfiguration_test");
 
@@ -51,24 +39,13 @@ int main(int argc, char** argv)
     << std::string(80, '-') << "\nAllowed configuration for AtomicNumber provider:";
   providerConfig.print_allowed_configuration(std::cout);
 
-  //
-  // test of the configuration
-  //
-
   mf::LogVerbatim("ValidateAtomicNumberConfiguration")
     << std::string(80, '-') << "\nValidating configuration from '"
     << config.ServiceParameterSetPath("AtomicNumberService") << "' in '"
     << config.ConfigurationPath() << "':";
-  // this will trigger validation
-  // and throw fhicl::detail::validationException on error
-  providerConfig.validate_ParameterSet(TesterEnv.ServiceParameters("AtomicNumberService"),
-                                       {"service_type"});
 
-  //
-  // done!
-  //
+  // this will trigger validation and throw fhicl::detail::validationException on error
+  providerConfig.validate(TesterEnv.ServiceParameters("AtomicNumberService"), {"service_type"});
+
   return 0;
-} // main()
-
-/// @}
-// END AtomicNumber ------------------------------------------------------------
+}
