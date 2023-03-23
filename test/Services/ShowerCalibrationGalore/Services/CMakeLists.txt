@@ -20,12 +20,3 @@ cet_test(ShowerCalibrationGaloreFromPIDTest HANDBUILT
    TEST_EXEC lar
    TEST_ARGS --rethrow-all --config ./test_shower_calibration_from_pid.fcl
    )
-
-
-# install all sources, plus CMakeLists.txt and all configuration files
-file(GLOB TESTFHICLFILES
-     LIST_DIRECTORIES false
-     *.fcl
-     )
-install_source(EXTRAS CMakeLists.txt ${TESTFHICLFILES})
-unset(TESTFHICLFILES)
