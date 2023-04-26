@@ -21,11 +21,3 @@ cet_build_plugin(TotallyCheatTracker art::EDProducer
 )
 install_headers()
 install_fhicl()
-
-# install all sources, plus CMakeLists.txt and all configuration files
-file(GLOB TESTFHICLFILES
-     LIST_DIRECTORIES false
-     *.fcl
-     )
-install_source(EXTRAS ${TESTFHICLFILES})
-unset(TESTFHICLFILES)

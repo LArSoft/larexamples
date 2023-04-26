@@ -24,12 +24,3 @@ cet_test(ValidateAtomicNumberConfiguration_test
   DATAFILES ./test_krypton_atomic_number.fcl
   TEST_ARGS ./test_krypton_atomic_number.fcl
 )
-
-
-# install all sources, plus CMakeLists.txt and all configuration files
-file(GLOB TESTFHICLFILES
-     LIST_DIRECTORIES false
-     *.fcl
-     )
-install_source(EXTRAS CMakeLists.txt ${TESTFHICLFILES})
-unset(TESTFHICLFILES)

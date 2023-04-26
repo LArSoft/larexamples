@@ -55,11 +55,3 @@ cet_test(PointIsolationAlgStress_test
   cetlib::cetlib
   TEST_ARGS 10000 0.05
   )
-
-# install all sources, plus CMakeLists.txt and all configuration files
-file(GLOB TESTFHICLFILES
-     LIST_DIRECTORIES false
-     *.fcl
-     )
-install_source(EXTRAS CMakeLists.txt ${TESTFHICLFILES})
-unset(TESTFHICLFILES)

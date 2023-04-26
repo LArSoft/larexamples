@@ -8,7 +8,7 @@ cet_make_library(LIBRARY_NAME ShowerCalibrationGaloreTests INTERFACE
 
 cet_make_library(LIBRARY_NAME CreateTestShowerCalibrationFromPID
   NO_INSTALL
-  SOURCE 
+  SOURCE
   CreateTestShowerCalibrationFromPID.cxx
   LIBRARIES PRIVATE
   ROOT::Core
@@ -40,11 +40,3 @@ cet_test(ShowerCalibrationGaloreScale_test
   larcorealg::unit_test_base
   messagefacility::MF_MessageLogger
 )
-
-# install all sources, plus CMakeLists.txt and all configuration files
-file(GLOB TESTFHICLFILES
-     LIST_DIRECTORIES false
-     *.fcl
-     )
-install_source(EXTRAS CMakeLists.txt ${TESTFHICLFILES})
-unset(TESTFHICLFILES)

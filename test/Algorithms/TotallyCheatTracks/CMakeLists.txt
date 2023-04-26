@@ -27,12 +27,3 @@ cet_test(
   TEST_ARGS -- --rethrow-all --config test_totallycheattracker.fcl
   DATAFILES test_totallycheattracker.fcl
   )
-
-
-# install all sources, plus CMakeLists.txt and all configuration files
-file(GLOB TESTFHICLFILES
-     LIST_DIRECTORIES false
-     *.fcl
-     )
-install_source(EXTRAS CMakeLists.txt ${TESTFHICLFILES})
-unset(TESTFHICLFILES)
