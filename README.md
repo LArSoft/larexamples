@@ -29,3 +29,9 @@ larexamples
 - RecoProxyUsageExample
 - Services
 
+## Package documentation
+
+-    [AnalysisExample](https://larsoft.github.io/LArSoftWiki/AnalysisExample) - a detailed tutorial on performing analysis tasks in LArSoft (current as of Aug-2017).
+-    [Algorithms](https://larsoft.github.io/LArSoftWiki/Writing_LArSoft_algorithms) - an example LArSoft algorithm and a module that invokes it.
+-    [Services](https://larsoft.github.io/LArSoftWiki/Writing_LArSoft_service) - example LArSoft services and providers.
+
