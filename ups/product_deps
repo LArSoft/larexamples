@@ -247,8 +247,8 @@ fcldir	product_dir	job
 #
 ####################################
 product		version		qual	flags		<table_format=2>
-larsim		v09_38_08	-
-cetmodules	v3_20_00	-	only_for_build
+larsim		v09_90_00rc0	-
+cetmodules	v3_22_02	-	only_for_build
 end_product_list
 ####################################
 
