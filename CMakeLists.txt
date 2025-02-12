@@ -26,21 +26,21 @@ cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
 find_package(larcore REQUIRED EXPORT)
 find_package(larcorealg REQUIRED EXPORT)
-find_package(larcoreobj REQUIRED EXPORT)
+find_package(larcoreobj REQUIRED)
 find_package(lardata REQUIRED EXPORT)
 find_package(lardataobj REQUIRED EXPORT)
-find_package(larsim REQUIRED EXPORT)
+find_package(larsim REQUIRED)
 
 find_package(nusimdata REQUIRED EXPORT)
 
-find_package(art_root_io REQUIRED EXPORT)
+find_package(art_root_io REQUIRED)
 find_package(art REQUIRED EXPORT)
-find_package(messagefacility REQUIRED EXPORT)
-find_package(canvas_root_io REQUIRED EXPORT)
+find_package(messagefacility REQUIRED)
+find_package(canvas_root_io REQUIRED)
 find_package(canvas REQUIRED EXPORT)
 find_package(fhiclcpp REQUIRED EXPORT)
 find_package(cetlib REQUIRED)
-find_package(cetlib_except REQUIRED)
+find_package(cetlib_except)
 
 find_package(ROOT COMPONENTS Core EG Hist MathMore Physics RIO Tree REQUIRED EXPORT)
 
