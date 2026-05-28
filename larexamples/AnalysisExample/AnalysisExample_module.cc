@@ -253,12 +253,13 @@ namespace lar::example {
     // The parameters we'll read from the .fcl file.
     art::InputTag fSimulationProducerLabel; ///< The name of the producer that tracked
                                             ///< simulated particles through the detector
-    art::InputTag fSimChannelProducerLabel; ///< The name of the producer that created wire information
-    art::InputTag fHitProducerLabel;        ///< The name of the producer that created hits
-    art::InputTag fClusterProducerLabel;    ///< The name of the producer that
-                                            ///< created clusters
-    int fSelectedPDG;                       ///< PDG code of particle we'll focus on
-    double fBinSize;                        ///< For dE/dx work: the value of dx.
+    art::InputTag
+      fSimChannelProducerLabel;          ///< The name of the producer that created wire information
+    art::InputTag fHitProducerLabel;     ///< The name of the producer that created hits
+    art::InputTag fClusterProducerLabel; ///< The name of the producer that
+                                         ///< created clusters
+    int fSelectedPDG;                    ///< PDG code of particle we'll focus on
+    double fBinSize;                     ///< For dE/dx work: the value of dx.
 
     // Pointers to the histograms we'll create.
     TH1D* fPDGCodeHist;     ///< PDG code of all particles
