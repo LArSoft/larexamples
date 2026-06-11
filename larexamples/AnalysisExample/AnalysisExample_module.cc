@@ -20,7 +20,7 @@
  * Also note that, despite our efforts, the documentation and the practices in this code
  * may fall out of date. In doubt, ask!
  *
- * The last revision of this code was done in August 2017 with LArSoft v06_44_00.
+ * The last revision of this code was done in June 2026 with LArSoft v10_20_08 to accommodate larg4 refactorization
  *
  * This is in-source documentation in Doxygen format. Doxygen is a utility that creates
  * web pages from specially-formatted comments in program code. If your package is ever
@@ -145,6 +145,11 @@ namespace lar::example {
    *   product with the detector simulation information (typically an instance
    *   of the LArG4 module)
    *
+   * - *SimChannelLabel* (string, default: "largeant"): tag of the input data
+   *   product with the wire simulation information. PS: this default label
+   *   will fail for anything run after the larg4 refactorization but can be
+   *   adjusted in the running fhicl file
+   *
    * - *HitLabel* (string, mandatory): tag of the input data product with
    *   reconstructed hits
    *
@@ -184,6 +189,11 @@ namespace lar::example {
       fhicl::Atom<art::InputTag> SimulationLabel{
         Name("SimulationLabel"),
         Comment("tag of the input data product with the detector simulation "
+                "information")};
+
+      fhicl::Atom<art::InputTag> SimChannelLabel{
+        Name("SimChannelLabel"),
+        Comment("tag of the input data product with wire simulation "
                 "information")};
 
       fhicl::Atom<art::InputTag> HitLabel{
@@ -243,11 +253,13 @@ namespace lar::example {
     // The parameters we'll read from the .fcl file.
     art::InputTag fSimulationProducerLabel; ///< The name of the producer that tracked
                                             ///< simulated particles through the detector
-    art::InputTag fHitProducerLabel;        ///< The name of the producer that created hits
-    art::InputTag fClusterProducerLabel;    ///< The name of the producer that
-                                            ///< created clusters
-    int fSelectedPDG;                       ///< PDG code of particle we'll focus on
-    double fBinSize;                        ///< For dE/dx work: the value of dx.
+    art::InputTag
+      fSimChannelProducerLabel;          ///< The name of the producer that created wire information
+    art::InputTag fHitProducerLabel;     ///< The name of the producer that created hits
+    art::InputTag fClusterProducerLabel; ///< The name of the producer that
+                                         ///< created clusters
+    int fSelectedPDG;                    ///< PDG code of particle we'll focus on
+    double fBinSize;                     ///< For dE/dx work: the value of dx.
 
     // Pointers to the histograms we'll create.
     TH1D* fPDGCodeHist;     ///< PDG code of all particles
@@ -324,6 +336,7 @@ namespace lar::example {
   AnalysisExample::AnalysisExample(Parameters const& config)
     : EDAnalyzer(config)
     , fSimulationProducerLabel(config().SimulationLabel())
+    , fSimChannelProducerLabel(config().SimChannelLabel())
     , fHitProducerLabel(config().HitLabel())
     , fClusterProducerLabel(config().ClusterLabel())
     , fSelectedPDG(config().PDGcode())
@@ -341,7 +354,7 @@ namespace lar::example {
     // ("may_consume"). Diligence here will in the future help the framework execute
     // modules in parallel, making sure the order is correct.
     consumes<std::vector<simb::MCParticle>>(fSimulationProducerLabel);
-    consumes<std::vector<sim::SimChannel>>(fSimulationProducerLabel);
+    consumes<std::vector<sim::SimChannel>>(fSimChannelProducerLabel);
     consumes<art::Assns<simb::MCTruth, simb::MCParticle>>(fSimulationProducerLabel);
     consumes<std::vector<recob::Hit>>(fHitProducerLabel);
     consumes<std::vector<recob::Cluster>>(fClusterProducerLabel);
@@ -463,7 +476,7 @@ namespace lar::example {
     // exception.
 
     auto simChannelHandle =
-      event.getValidHandle<std::vector<sim::SimChannel>>(fSimulationProducerLabel);
+      event.getValidHandle<std::vector<sim::SimChannel>>(fSimChannelProducerLabel);
 
     //
     // Let's compute the variables for the simulation n-tuple first.
